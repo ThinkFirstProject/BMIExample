@@ -1,0 +1,35 @@
+﻿@section content {
+   @Scripts.Render("~/Scripts/Custom/Overview.js")
+    @{
+        List<String> personsdata = ViewBag.personsList;
+        
+         <div>
+             <table class="overviewTable">
+                 @{
+                    if (personsdata.Count == 0)
+                    {
+                        <tr>
+                            <td>
+                                EMPTY 
+                            </td>
+                        </tr>   
+                    }
+                    else
+                    {
+                        foreach (String socNr in personsdata)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.ActionLink(socNr, "ViewDetail", new {sosecNr = socNr})
+                                </td>
+                            </tr>
+                        }
+                    }
+                 }
+             </table> 
+             
+             <button id="btnNewPerson">New</button>        
+         </div>
+     }
+}
+

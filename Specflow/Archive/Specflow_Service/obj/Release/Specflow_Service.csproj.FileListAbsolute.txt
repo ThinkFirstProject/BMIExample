@@ -1,0 +1,5 @@
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\Specflow\Specflow_Service\bin\Release\Specflow_Service.dll
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\Specflow\Specflow_Service\bin\Release\Specflow_Service.pdb
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\Specflow\Specflow_Service\obj\Release\Specflow_Service.csprojResolveAssemblyReference.cache
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\Specflow\Specflow_Service\obj\Release\Specflow_Service.dll
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\Specflow\Specflow_Service\obj\Release\Specflow_Service.pdb

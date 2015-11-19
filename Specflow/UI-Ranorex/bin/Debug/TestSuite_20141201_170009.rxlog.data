@@ -1,0 +1,28 @@
+﻿<report>
+	<activity
+	user="Bart"
+	host="PC-BART-SALMON"
+	rxversion="5.2.0.20272"
+	osversion="Windows 8.1 64bit"
+	runtimeversion="4.0.30319.34014"
+	procarch="32bit"
+	language="nl-NL"
+	screenresolution="4000x1280"
+	timestamp="1/12/2014 17:00:09"
+	timestampiso="2014-12-01T16:00:09"
+	timeoutfactor="1"
+	result="Success"
+	duration="0ms"
+	durationms="0"
+	type="root"
+	rid="aafbfc749b495d0"
+	totalerrorcount="0"
+	totalwarningcount="0"
+	totalsuccesscount="0"
+	totalfailedcount="0"
+	totalblockedcount="0">
+		<detail>
+			Ranorex Testscript
+		</detail>
+	</activity>
+</report>

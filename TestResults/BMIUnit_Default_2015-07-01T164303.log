@@ -1,0 +1,517 @@
+﻿VS filter: testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+compared+to+another+measurement%2c+an+earlier+date | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+creating+a+measurement+object%2c+the+length+has+to+be+valid%2c+bit+to+big+length | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurements+weight+can+be+modified%2c+just+big+enough+weight | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+modifying+the+weight+of+a+measurement%2c+the+weight+should+be+valid%2c+bit+to+big+weight | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+modifying+the+weight+of+a+measurement%2c+the+weight+should+be+valid%2c+bit+to+small+weight | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+checked+for+equality+to+a+measurement+which+is+null | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurements+weight+can+be+modified%2c+just+small+enough+weight | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+creating+a+measurement+object%2c+the+length+has+to+be+valid%2c+lot+to+big+length | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+new+measurement+object+can+be+created%2c+normal+weight | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+creating+a+measurement+object%2c+the+weight+has+to+be+valid%2c+bit+to+big+weight | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+modifying+the+length+of+a+measurement%2c+the+length+should+be+valid%2c+bit+to+big+length | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+modifying+the+length+of+a+measurement%2c+the+length+should+be+valid%2c+lot+to+small+length | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurements+length+can+be+modified%2c+just+big+enough+length | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+modifying+the+length+of+a+measurement%2c+the+length+should+be+valid%2c+lot+to+big+length | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+checked+for+equality+to+another+measurement%2c+an+earlier+date | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+checked+for+equality+to+another+measurement%2c+a+later+date | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+modifying+the+length+of+a+measurement%2c+the+length+should+be+valid%2c+bit+to+small+length | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+compared+to+a+measurement+which+is+null | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+modifying+the+weight+of+a+measurement%2c+the+weight+should+be+valid%2c+lot+to+big+weight | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+modified+with+a+new+date | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+modifying+the+weight+of+a+measurement%2c+the+weight+should+be+valid%2c+lot+to+small+weight | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+creating+a+measurement+object%2c+the+weight+has+to+be+valid%2c+lot+to+small+weight | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+compared+to+another+measurement%2c+a+later+date | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+compared+to+another+measurement%2c+the+same+date | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+new+measurement+object+can+be+created%2c+just+small+enough+weight | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+new+measurement+object+can+be+created%2c+normal+length | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+creating+a+measurement+object%2c+the+length+has+to+be+valid%2c+bit+to+small+length | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+creating+a+measurement+object%2c+the+weight+has+to+be+valid%2c+lot+to+big+weight | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+new+measurement+object+can+be+created%2c+just+big+enough+weight | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+new+measurement+object+can+be+created%2c+just+small+enough+length | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurements+length+can+be+modified%2c+OTHER_normal+length | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+new+measurement+object+can+be+created%2c+just+big+enough+length | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+checked+for+equality+to+another+measurement%2c+the+same+date | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurements+length+can+be+modified%2c+just+small+enough+length | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurements+weight+can+be+modified%2c+OTHER_normal+weight | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+creating+a+measurement+object%2c+the+length+has+to+be+valid%2c+lot+to+small+length | testpath:TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+creating+a+measurement+object%2c+the+weight+has+to+be+valid%2c+bit+to+small+weight
+Appdomain Disposed
+Test Suite Dump
+#0: BMIUnit/Default - 
+#1: Default - 
+#2: Specflow_Unit - 
+#21: Measurement - 
+#22: A new measurement object can be created, normal length - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+new+measurement+object+can+be+created%2c+normal+length
+#23: A new measurement object can be created, just big enough length - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+new+measurement+object+can+be+created%2c+just+big+enough+length
+#24: A new measurement object can be created, just small enough length - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+new+measurement+object+can+be+created%2c+just+small+enough+length
+#25: A new measurement object can be created, normal weight - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+new+measurement+object+can+be+created%2c+normal+weight
+#26: A new measurement object can be created, just big enough weight - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+new+measurement+object+can+be+created%2c+just+big+enough+weight
+#27: A new measurement object can be created, just small enough weight - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+new+measurement+object+can+be+created%2c+just+small+enough+weight
+#28: When creating a measurement object, the length has to be valid, lot to small length - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+creating+a+measurement+object%2c+the+length+has+to+be+valid%2c+lot+to+small+length
+#29: When creating a measurement object, the length has to be valid, bit to small length - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+creating+a+measurement+object%2c+the+length+has+to+be+valid%2c+bit+to+small+length
+#30: When creating a measurement object, the length has to be valid, bit to big length - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+creating+a+measurement+object%2c+the+length+has+to+be+valid%2c+bit+to+big+length
+#31: When creating a measurement object, the length has to be valid, lot to big length - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+creating+a+measurement+object%2c+the+length+has+to+be+valid%2c+lot+to+big+length
+#32: When creating a measurement object, the weight has to be valid, lot to small weight - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+creating+a+measurement+object%2c+the+weight+has+to+be+valid%2c+lot+to+small+weight
+#33: When creating a measurement object, the weight has to be valid, bit to small weight - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+creating+a+measurement+object%2c+the+weight+has+to+be+valid%2c+bit+to+small+weight
+#34: When creating a measurement object, the weight has to be valid, bit to big weight - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+creating+a+measurement+object%2c+the+weight+has+to+be+valid%2c+bit+to+big+weight
+#35: When creating a measurement object, the weight has to be valid, lot to big weight - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+creating+a+measurement+object%2c+the+weight+has+to+be+valid%2c+lot+to+big+weight
+#36: A measurements length can be modified, OTHER_normal length - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurements+length+can+be+modified%2c+OTHER_normal+length
+#37: A measurements length can be modified, just big enough length - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurements+length+can+be+modified%2c+just+big+enough+length
+#38: A measurements length can be modified, just small enough length - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurements+length+can+be+modified%2c+just+small+enough+length
+#39: A measurements weight can be modified, OTHER_normal weight - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurements+weight+can+be+modified%2c+OTHER_normal+weight
+#40: A measurements weight can be modified, just big enough weight - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurements+weight+can+be+modified%2c+just+big+enough+weight
+#41: A measurements weight can be modified, just small enough weight - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurements+weight+can+be+modified%2c+just+small+enough+weight
+#42: When modifying the length of a measurement, the length should be valid, lot to small length - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+modifying+the+length+of+a+measurement%2c+the+length+should+be+valid%2c+lot+to+small+length
+#43: When modifying the length of a measurement, the length should be valid, bit to small length - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+modifying+the+length+of+a+measurement%2c+the+length+should+be+valid%2c+bit+to+small+length
+#44: When modifying the length of a measurement, the length should be valid, bit to big length - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+modifying+the+length+of+a+measurement%2c+the+length+should+be+valid%2c+bit+to+big+length
+#45: When modifying the length of a measurement, the length should be valid, lot to big length - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+modifying+the+length+of+a+measurement%2c+the+length+should+be+valid%2c+lot+to+big+length
+#46: When modifying the weight of a measurement, the weight should be valid, lot to small weight - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+modifying+the+weight+of+a+measurement%2c+the+weight+should+be+valid%2c+lot+to+small+weight
+#47: When modifying the weight of a measurement, the weight should be valid, bit to small weight - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+modifying+the+weight+of+a+measurement%2c+the+weight+should+be+valid%2c+bit+to+small+weight
+#48: When modifying the weight of a measurement, the weight should be valid, bit to big weight - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+modifying+the+weight+of+a+measurement%2c+the+weight+should+be+valid%2c+bit+to+big+weight
+#49: When modifying the weight of a measurement, the weight should be valid, lot to big weight - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:When+modifying+the+weight+of+a+measurement%2c+the+weight+should+be+valid%2c+lot+to+big+weight
+#50: A measurement can be modified with a new date - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+modified+with+a+new+date
+#51: A measurement can be compared to a measurement which is null - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+compared+to+a+measurement+which+is+null
+#52: A measurement can be compared to another measurement, an earlier date - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+compared+to+another+measurement%2c+an+earlier+date
+#53: A measurement can be compared to another measurement, a later date - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+compared+to+another+measurement%2c+a+later+date
+#54: A measurement can be compared to another measurement, the same date - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+compared+to+another+measurement%2c+the+same+date
+#55: A measurement can be checked for equality to a measurement which is null - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+checked+for+equality+to+a+measurement+which+is+null
+#56: A measurement can be checked for equality to another measurement, an earlier date - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+checked+for+equality+to+another+measurement%2c+an+earlier+date
+#57: A measurement can be checked for equality to another measurement, a later date - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+checked+for+equality+to+another+measurement%2c+a+later+date
+#58: A measurement can be checked for equality to another measurement, the same date - TestAssembly:Specflow_Unit/Feature:Measurement/Scenario:A+measurement+can+be+checked+for+equality+to+another+measurement%2c+the+same+date
+End: Test Suite Dump
+Scheduler: considering #22 for thread #0
+Scheduler: using #22 for thread #0
+Test #22 is scheduled for thread #0
+Thread #0: creating new test thread executor for Specflow_Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null (target: Default)
+Loading SpecRun type 'TechTalk.SpecRun.Framework.TestAssemblyExecutor' from: C:\Users\Bart\AppData\Local\Temp\VisualStudioTestExplorerExtensions\SpecRun.Runner.1.2.0\tools\TechTalk.SpecRun.Framework.Executor.dll
+Test #22/0 is started on thread #0
+B:Given a length 180 is provided
+T:done: MeasurementSteps.GivenALengthIsProvided(180) (0,0s)
+B:And a weight  75000 is provided
+T:done: MeasurementSteps.GivenAWeightIsProvided(75000) (0,0s)
+B:And a valid date is enterd
+T:done: MeasurementSteps.GivenAValidDateIsEnterd() (0,0s)
+B:When i try to create a new measurement object with normal length
+T:done: MeasurementSteps.WhenITryToCreateANewMeasurementObjectWithNormalLength("normal length") (0,0s)
+B:Then the measurement object is created with the enterd data
+T:done: MeasurementSteps.ThenTheMeasurementObjectIsCreated() (0,0s)
+Scheduler: considering #23 for thread #0
+Scheduler: using #23 for thread #0
+Test #23 is scheduled for thread #0
+Test #22 is finished on thread #0 as Succeeded within 0,2657555 seconds
+Test #23/0 is started on thread #0
+B:Given a length 25 is provided
+T:done: MeasurementSteps.GivenALengthIsProvided(25) (0,0s)
+B:And a weight  75000 is provided
+T:done: MeasurementSteps.GivenAWeightIsProvided(75000) (0,0s)
+B:And a valid date is enterd
+T:done: MeasurementSteps.GivenAValidDateIsEnterd() (0,0s)
+B:When i try to create a new measurement object with just big enough length
+T:done: MeasurementSteps.WhenITryToCreateANewMeasurementObjectWithNormalLength("just big enough l...") (0,0s)
+B:Then the measurement object is created with the enterd data
+T:done: MeasurementSteps.ThenTheMeasurementObjectIsCreated() (0,0s)
+Scheduler: considering #24 for thread #0
+Scheduler: using #24 for thread #0
+Test #24 is scheduled for thread #0
+Test #23 is finished on thread #0 as Succeeded within 0,0059871 seconds
+Test #24/0 is started on thread #0
+B:Given a length 275 is provided
+T:done: MeasurementSteps.GivenALengthIsProvided(275) (0,0s)
+B:And a weight  75000 is provided
+T:done: MeasurementSteps.GivenAWeightIsProvided(75000) (0,0s)
+B:And a valid date is enterd
+T:done: MeasurementSteps.GivenAValidDateIsEnterd() (0,0s)
+B:When i try to create a new measurement object with just small enough length
+T:done: MeasurementSteps.WhenITryToCreateANewMeasurementObjectWithNormalLength("just small enough...") (0,0s)
+B:Then the measurement object is created with the enterd data
+T:done: MeasurementSteps.ThenTheMeasurementObjectIsCreated() (0,0s)
+Scheduler: considering #25 for thread #0
+Scheduler: using #25 for thread #0
+Test #25 is scheduled for thread #0
+Test #24 is finished on thread #0 as Succeeded within 0,0060038 seconds
+Test #25/0 is started on thread #0
+B:Given a length 180 is provided
+T:done: MeasurementSteps.GivenALengthIsProvided(180) (0,0s)
+B:And a weight  75000 is provided
+T:done: MeasurementSteps.GivenAWeightIsProvided(75000) (0,0s)
+B:And a valid date is enterd
+T:done: MeasurementSteps.GivenAValidDateIsEnterd() (0,0s)
+B:When i try to create a new measurement object with normal weight
+T:done: MeasurementSteps.WhenITryToCreateANewMeasurementObjectWithNormalLength("normal weight") (0,0s)
+B:Then the measurement object is created with the enterd data
+T:done: MeasurementSteps.ThenTheMeasurementObjectIsCreated() (0,0s)
+Scheduler: considering #26 for thread #0
+Scheduler: using #26 for thread #0
+Test #26 is scheduled for thread #0
+Test #25 is finished on thread #0 as Succeeded within 0,0050053 seconds
+Test #26/0 is started on thread #0
+B:Given a length 180 is provided
+T:done: MeasurementSteps.GivenALengthIsProvided(180) (0,0s)
+B:And a weight  300 is provided
+T:done: MeasurementSteps.GivenAWeightIsProvided(300) (0,0s)
+B:And a valid date is enterd
+T:done: MeasurementSteps.GivenAValidDateIsEnterd() (0,0s)
+B:When i try to create a new measurement object with just big enough weight
+T:done: MeasurementSteps.WhenITryToCreateANewMeasurementObjectWithNormalLength("just big enough w...") (0,0s)
+B:Then the measurement object is created with the enterd data
+T:done: MeasurementSteps.ThenTheMeasurementObjectIsCreated() (0,0s)
+Scheduler: considering #27 for thread #0
+Scheduler: using #27 for thread #0
+Test #27 is scheduled for thread #0
+Test #26 is finished on thread #0 as Succeeded within 0,0070054 seconds
+Test #27/0 is started on thread #0
+B:Given a length 180 is provided
+T:done: MeasurementSteps.GivenALengthIsProvided(180) (0,0s)
+B:And a weight  600000 is provided
+T:done: MeasurementSteps.GivenAWeightIsProvided(600000) (0,0s)
+B:And a valid date is enterd
+T:done: MeasurementSteps.GivenAValidDateIsEnterd() (0,0s)
+B:When i try to create a new measurement object with just small enough weight
+T:done: MeasurementSteps.WhenITryToCreateANewMeasurementObjectWithNormalLength("just small enough...") (0,0s)
+B:Then the measurement object is created with the enterd data
+T:done: MeasurementSteps.ThenTheMeasurementObjectIsCreated() (0,0s)
+Scheduler: considering #28 for thread #0
+Scheduler: using #28 for thread #0
+Test #28 is scheduled for thread #0
+Test #27 is finished on thread #0 as Succeeded within 0,006006 seconds
+Test #28/0 is started on thread #0
+B:Given an invalid length 15 is provided, which is invalid because lot to small length
+T:done: MeasurementSteps.GivenAnInvalidLengthIsProvidedWhichIsInvalidBecauseLotToSmallLength(15, "lot to small length") (0,0s)
+B:And all other parameters are valid
+T:done: MeasurementSteps.GivenAllOtherParametersAreValid() (0,0s)
+B:When i try to create a new measurement
+T:done: MeasurementSteps.WhenITryToCreateANewMeasurement() (0,0s)
+B:Then the measurement object should throw an argument exception
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)
+Scheduler: considering #29 for thread #0
+Scheduler: using #29 for thread #0
+Test #29 is scheduled for thread #0
+Test #28 is finished on thread #0 as Succeeded within 0,0080078 seconds
+Test #29/0 is started on thread #0
+B:Given an invalid length 24 is provided, which is invalid because bit to small length
+T:done: MeasurementSteps.GivenAnInvalidLengthIsProvidedWhichIsInvalidBecauseLotToSmallLength(24, "bit to small length") (0,0s)
+B:And all other parameters are valid
+T:done: MeasurementSteps.GivenAllOtherParametersAreValid() (0,0s)
+B:When i try to create a new measurement
+T:done: MeasurementSteps.WhenITryToCreateANewMeasurement() (0,0s)
+B:Then the measurement object should throw an argument exception
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)
+Scheduler: considering #30 for thread #0
+Scheduler: using #30 for thread #0
+Test #30 is scheduled for thread #0
+Test #29 is finished on thread #0 as Succeeded within 0,0040024 seconds
+Test #30/0 is started on thread #0
+B:Given an invalid length 276 is provided, which is invalid because bit to big length
+T:done: MeasurementSteps.GivenAnInvalidLengthIsProvidedWhichIsInvalidBecauseLotToSmallLength(276, "bit to big length") (0,0s)
+B:And all other parameters are valid
+T:done: MeasurementSteps.GivenAllOtherParametersAreValid() (0,0s)
+B:When i try to create a new measurement
+T:done: MeasurementSteps.WhenITryToCreateANewMeasurement() (0,0s)
+B:Then the measurement object should throw an argument exception
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)
+Scheduler: considering #31 for thread #0
+Scheduler: using #31 for thread #0
+Test #31 is scheduled for thread #0
+Test #30 is finished on thread #0 as Succeeded within 0,0050053 seconds
+Test #31/0 is started on thread #0
+B:Given an invalid length 300 is provided, which is invalid because lot to big length
+T:done: MeasurementSteps.GivenAnInvalidLengthIsProvidedWhichIsInvalidBecauseLotToSmallLength(300, "lot to big length") (0,0s)
+B:And all other parameters are valid
+T:done: MeasurementSteps.GivenAllOtherParametersAreValid() (0,0s)
+B:When i try to create a new measurement
+T:done: MeasurementSteps.WhenITryToCreateANewMeasurement() (0,0s)
+B:Then the measurement object should throw an argument exception
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)
+Scheduler: considering #32 for thread #0
+Scheduler: using #32 for thread #0
+Test #32 is scheduled for thread #0
+Test #31 is finished on thread #0 as Succeeded within 0,0040032 seconds
+Test #32/0 is started on thread #0
+B:Given an invalid weight 100 is provided, which is invalid because lot to small weight
+T:done: MeasurementSteps.GivenAnInvalidWeightIsProvidedWhichIsInvalidBecauseLotToSmallWeight(100, "lot to small weight") (0,0s)
+B:And all other parameters are valid
+T:done: MeasurementSteps.GivenAllOtherParametersAreValid() (0,0s)
+B:When i try to create a new measurement
+T:done: MeasurementSteps.WhenITryToCreateANewMeasurement() (0,0s)
+B:Then the measurement object should throw an argument exception
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)
+Scheduler: considering #33 for thread #0
+Scheduler: using #33 for thread #0
+Test #33 is scheduled for thread #0
+Test #32 is finished on thread #0 as Succeeded within 0,0060043 seconds
+Test #33/0 is started on thread #0
+B:Given an invalid weight 299 is provided, which is invalid because bit to small weight
+T:done: MeasurementSteps.GivenAnInvalidWeightIsProvidedWhichIsInvalidBecauseLotToSmallWeight(299, "bit to small weight") (0,0s)
+B:And all other parameters are valid
+T:done: MeasurementSteps.GivenAllOtherParametersAreValid() (0,0s)
+B:When i try to create a new measurement
+T:done: MeasurementSteps.WhenITryToCreateANewMeasurement() (0,0s)
+B:Then the measurement object should throw an argument exception
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)
+Scheduler: considering #34 for thread #0
+Scheduler: using #34 for thread #0
+Test #34 is scheduled for thread #0
+Test #33 is finished on thread #0 as Succeeded within 0,0050211 seconds
+Test #34/0 is started on thread #0
+B:Given an invalid weight 600001 is provided, which is invalid because bit to big weight
+T:done: MeasurementSteps.GivenAnInvalidWeightIsProvidedWhichIsInvalidBecauseLotToSmallWeight(600001, "bit to big weight") (0,0s)
+B:And all other parameters are valid
+T:done: MeasurementSteps.GivenAllOtherParametersAreValid() (0,0s)
+B:When i try to create a new measurement
+T:done: MeasurementSteps.WhenITryToCreateANewMeasurement() (0,0s)
+B:Then the measurement object should throw an argument exception
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)
+Scheduler: considering #35 for thread #0
+Scheduler: using #35 for thread #0
+Test #35 is scheduled for thread #0
+Test #34 is finished on thread #0 as Succeeded within 0,0059871 seconds
+Test #35/0 is started on thread #0
+B:Given an invalid weight 660000 is provided, which is invalid because lot to big weight
+T:done: MeasurementSteps.GivenAnInvalidWeightIsProvidedWhichIsInvalidBecauseLotToSmallWeight(660000, "lot to big weight") (0,0s)
+B:And all other parameters are valid
+T:done: MeasurementSteps.GivenAllOtherParametersAreValid() (0,0s)
+B:When i try to create a new measurement
+T:done: MeasurementSteps.WhenITryToCreateANewMeasurement() (0,0s)
+B:Then the measurement object should throw an argument exception
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)
+Scheduler: considering #36 for thread #0
+Scheduler: using #36 for thread #0
+Test #36 is scheduled for thread #0
+Test #35 is finished on thread #0 as Succeeded within 0,0050019 seconds
+Test #36/0 is started on thread #0
+B:Given a valid measurement object
+T:done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)
+B:When i try to change the length to 190, which is OTHER_normal length
+T:done: MeasurementSteps.WhenITryToChangeTheLengthToWhichIsOTHER_NormalLength(190, "OTHER_normal length") (0,0s)
+B:Then the measurement object should be updated with the new length value
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldBeUpdatedWithTheNewLengthValue() (0,0s)
+Scheduler: considering #37 for thread #0
+Scheduler: using #37 for thread #0
+Test #37 is scheduled for thread #0
+Test #36 is finished on thread #0 as Succeeded within 0,0040028 seconds
+Test #37/0 is started on thread #0
+B:Given a valid measurement object
+T:done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)
+B:When i try to change the length to 25, which is just big enough length
+T:done: MeasurementSteps.WhenITryToChangeTheLengthToWhichIsOTHER_NormalLength(25, "just big enough l...") (0,0s)
+B:Then the measurement object should be updated with the new length value
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldBeUpdatedWithTheNewLengthValue() (0,0s)
+Scheduler: considering #38 for thread #0
+Scheduler: using #38 for thread #0
+Test #38 is scheduled for thread #0
+Test #37 is finished on thread #0 as Succeeded within 0,0040041 seconds
+Test #38/0 is started on thread #0
+B:Given a valid measurement object
+T:done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)
+B:When i try to change the length to 275, which is just small enough length
+T:done: MeasurementSteps.WhenITryToChangeTheLengthToWhichIsOTHER_NormalLength(275, "just small enough...") (0,0s)
+B:Then the measurement object should be updated with the new length value
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldBeUpdatedWithTheNewLengthValue() (0,0s)
+Scheduler: considering #39 for thread #0
+Scheduler: using #39 for thread #0
+Test #39 is scheduled for thread #0
+Test #38 is finished on thread #0 as Succeeded within 0,0040028 seconds
+Test #39/0 is started on thread #0
+B:Given a valid measurement object
+T:done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)
+B:When i try to change the weight to 80000, which is OTHER_normal weight
+T:done: MeasurementSteps.WhenITryToChangeTheWeightToWhichIsOTHER_NormalWeight(80000, "OTHER_normal weight") (0,0s)
+B:Then the measurement object should be updated with the new weight value
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldBeUpdatedWithTheNewWeightValue() (0,0s)
+Scheduler: considering #40 for thread #0
+Scheduler: using #40 for thread #0
+Test #40 is scheduled for thread #0
+Test #39 is finished on thread #0 as Succeeded within 0,0050036 seconds
+Test #40/0 is started on thread #0
+B:Given a valid measurement object
+T:done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)
+B:When i try to change the weight to 300, which is just big enough weight
+T:done: MeasurementSteps.WhenITryToChangeTheWeightToWhichIsOTHER_NormalWeight(300, "just big enough w...") (0,0s)
+B:Then the measurement object should be updated with the new weight value
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldBeUpdatedWithTheNewWeightValue() (0,0s)
+Scheduler: considering #41 for thread #0
+Scheduler: using #41 for thread #0
+Test #41 is scheduled for thread #0
+Test #40 is finished on thread #0 as Succeeded within 0,0030025 seconds
+Test #41/0 is started on thread #0
+B:Given a valid measurement object
+T:done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)
+B:When i try to change the weight to 600000, which is just small enough weight
+T:done: MeasurementSteps.WhenITryToChangeTheWeightToWhichIsOTHER_NormalWeight(600000, "just small enough...") (0,0s)
+B:Then the measurement object should be updated with the new weight value
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldBeUpdatedWithTheNewWeightValue() (0,0s)
+Scheduler: considering #42 for thread #0
+Scheduler: using #42 for thread #0
+Test #42 is scheduled for thread #0
+Test #41 is finished on thread #0 as Succeeded within 0,0040174 seconds
+Test #42/0 is started on thread #0
+B:Given a valid measurement object
+T:done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)
+B:When i try to change the length to 15, which is lot to small length
+T:done: MeasurementSteps.WhenITryToChangeTheLengthToWhichIsOTHER_NormalLength(15, "lot to small length") (0,0s)
+B:Then the measurement object should throw an argument exception
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)
+Scheduler: considering #43 for thread #0
+Scheduler: using #43 for thread #0
+Test #43 is scheduled for thread #0
+Test #42 is finished on thread #0 as Succeeded within 0,0039891 seconds
+Test #43/0 is started on thread #0
+B:Given a valid measurement object
+T:done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)
+B:When i try to change the length to 24, which is bit to small length
+T:done: MeasurementSteps.WhenITryToChangeTheLengthToWhichIsOTHER_NormalLength(24, "bit to small length") (0,0s)
+B:Then the measurement object should throw an argument exception
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)
+Scheduler: considering #44 for thread #0
+Scheduler: using #44 for thread #0
+Test #44 is scheduled for thread #0
+Test #43 is finished on thread #0 as Succeeded within 0,0050216 seconds
+Test #44/0 is started on thread #0
+B:Given a valid measurement object
+T:done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)
+B:When i try to change the length to 276, which is bit to big length
+T:done: MeasurementSteps.WhenITryToChangeTheLengthToWhichIsOTHER_NormalLength(276, "bit to big length") (0,0s)
+B:Then the measurement object should throw an argument exception
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)
+Scheduler: considering #45 for thread #0
+Scheduler: using #45 for thread #0
+Test #45 is scheduled for thread #0
+Test #44 is finished on thread #0 as Succeeded within 0,0039861 seconds
+Test #45/0 is started on thread #0
+B:Given a valid measurement object
+T:done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)
+B:When i try to change the length to 300, which is lot to big length
+T:done: MeasurementSteps.WhenITryToChangeTheLengthToWhichIsOTHER_NormalLength(300, "lot to big length") (0,0s)
+B:Then the measurement object should throw an argument exception
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)
+Scheduler: considering #46 for thread #0
+Scheduler: using #46 for thread #0
+Test #46 is scheduled for thread #0
+Test #45 is finished on thread #0 as Succeeded within 0,0039853 seconds
+Test #46/0 is started on thread #0
+B:Given a valid measurement object
+T:done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)
+B:When i try to change the weight to 100, which is <Circumstance>
+T:done: MeasurementSteps.WhenITryToChangeTheWeightToWhichIsOTHER_NormalWeight(100, "<Circumstance>") (0,0s)
+B:Then the measurement object should throw an argument exception
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)
+Scheduler: considering #47 for thread #0
+Scheduler: using #47 for thread #0
+Test #47 is scheduled for thread #0
+Test #46 is finished on thread #0 as Succeeded within 0,0040203 seconds
+Test #47/0 is started on thread #0
+B:Given a valid measurement object
+T:done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)
+B:When i try to change the weight to 299, which is <Circumstance>
+T:done: MeasurementSteps.WhenITryToChangeTheWeightToWhichIsOTHER_NormalWeight(299, "<Circumstance>") (0,0s)
+B:Then the measurement object should throw an argument exception
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)
+Scheduler: considering #48 for thread #0
+Scheduler: using #48 for thread #0
+Test #48 is scheduled for thread #0
+Test #47 is finished on thread #0 as Succeeded within 0,003446 seconds
+Test #48/0 is started on thread #0
+B:Given a valid measurement object
+T:done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)
+B:When i try to change the weight to 600001, which is <Circumstance>
+T:done: MeasurementSteps.WhenITryToChangeTheWeightToWhichIsOTHER_NormalWeight(600001, "<Circumstance>") (0,0s)
+B:Then the measurement object should throw an argument exception
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)
+Scheduler: considering #49 for thread #0
+Scheduler: using #49 for thread #0
+Test #49 is scheduled for thread #0
+Test #48 is finished on thread #0 as Succeeded within 0,0030021 seconds
+Test #49/0 is started on thread #0
+B:Given a valid measurement object
+T:done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)
+B:When i try to change the weight to 660000, which is <Circumstance>
+T:done: MeasurementSteps.WhenITryToChangeTheWeightToWhichIsOTHER_NormalWeight(660000, "<Circumstance>") (0,0s)
+B:Then the measurement object should throw an argument exception
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)
+Scheduler: considering #50 for thread #0
+Scheduler: using #50 for thread #0
+Test #50 is scheduled for thread #0
+Test #49 is finished on thread #0 as Succeeded within 0,0040028 seconds
+Test #50/0 is started on thread #0
+B:Given a valid measurement object
+T:done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)
+B:When the date is changed with a valid value: 5-10-2013
+T:done: MeasurementSteps.WhenTheDateIsChangedWithAValidValue("5-10-2013") (0,0s)
+B:Then the measurement object should be updated with the new date
+T:done: MeasurementSteps.ThenTheMeasurementObjectShouldBeUpdatedWithTheNewDate() (0,0s)
+Scheduler: considering #51 for thread #0
+Scheduler: using #51 for thread #0
+Test #51 is scheduled for thread #0
+Test #50 is finished on thread #0 as Succeeded within 0,0050066 seconds
+Test #51/0 is started on thread #0
+B:Given a valid measurement object
+T:done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)
+B:And another measurement object is created which is null
+T:done: MeasurementSteps.GivenAnotherMeasurementObjectIsCreatedWhichIsNull() (0,0s)
+B:When the measurement object is compared to the other measurement
+T:done: MeasurementSteps.WhenTheMeasurementObjectIsComparedToTheOtherMeasurement() (0,0s)
+B:Then the result should be positive
+T:done: MeasurementSteps.ThenTheResultShouldBePositive("positive") (0,0s)
+Scheduler: considering #52 for thread #0
+Scheduler: using #52 for thread #0
+Test #52 is scheduled for thread #0
+Test #51 is finished on thread #0 as Succeeded within 0,007002 seconds
+Test #52/0 is started on thread #0
+B:Given a valid measurement object with date 1-1-2001
+T:done: MeasurementSteps.GivenAValidMeasurementObjectIsGeneratedWithDate("1-1-2001") (0,0s)
+B:And another measurement object is created with the date 1-1-2000 which is an earlier date
+T:done: MeasurementSteps.GivenAnotherMeasurementObjectIsCreatedWithTheDateWhichIsAnEarlierDate("1-1-2000", "an earlier date") (0,0s)
+B:When the measurement object is compared to the other measurement
+T:done: MeasurementSteps.WhenTheMeasurementObjectIsComparedToTheOtherMeasurement() (0,0s)
+B:Then the result should be positive
+T:done: MeasurementSteps.ThenTheResultShouldBePositive("positive") (0,0s)
+Scheduler: considering #53 for thread #0
+Scheduler: using #53 for thread #0
+Test #53 is scheduled for thread #0
+Test #52 is finished on thread #0 as Succeeded within 0,0050035 seconds
+Test #53/0 is started on thread #0
+B:Given a valid measurement object with date 1-1-2001
+T:done: MeasurementSteps.GivenAValidMeasurementObjectIsGeneratedWithDate("1-1-2001") (0,0s)
+B:And another measurement object is created with the date 1-2-2001 which is a later date
+T:done: MeasurementSteps.GivenAnotherMeasurementObjectIsCreatedWithTheDateWhichIsAnEarlierDate("1-2-2001", "a later date") (0,0s)
+B:When the measurement object is compared to the other measurement
+T:done: MeasurementSteps.WhenTheMeasurementObjectIsComparedToTheOtherMeasurement() (0,0s)
+B:Then the result should be negative
+T:done: MeasurementSteps.ThenTheResultShouldBePositive("negative") (0,0s)
+Scheduler: considering #54 for thread #0
+Scheduler: using #54 for thread #0
+Test #54 is scheduled for thread #0
+Test #53 is finished on thread #0 as Succeeded within 0,0050053 seconds
+Test #54/0 is started on thread #0
+B:Given a valid measurement object with date 1-1-2001
+T:done: MeasurementSteps.GivenAValidMeasurementObjectIsGeneratedWithDate("1-1-2001") (0,0s)
+B:And another measurement object is created with the date 1-1-2001 which is the same date
+T:done: MeasurementSteps.GivenAnotherMeasurementObjectIsCreatedWithTheDateWhichIsAnEarlierDate("1-1-2001", "the same date") (0,0s)
+B:When the measurement object is compared to the other measurement
+T:done: MeasurementSteps.WhenTheMeasurementObjectIsComparedToTheOtherMeasurement() (0,0s)
+B:Then the result should be zero
+T:done: MeasurementSteps.ThenTheResultShouldBePositive("zero") (0,0s)
+Scheduler: considering #55 for thread #0
+Scheduler: using #55 for thread #0
+Test #55 is scheduled for thread #0
+Test #54 is finished on thread #0 as Succeeded within 0,0050181 seconds
+Test #55/0 is started on thread #0
+B:Given a valid measurement object
+T:done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)
+B:And another measurement object is created which is null
+T:done: MeasurementSteps.GivenAnotherMeasurementObjectIsCreatedWhichIsNull() (0,0s)
+B:When i try to check for equality between both measurements
+T:done: MeasurementSteps.WhenITryToCheckForEqualityBetweenBothMeasurements() (0,0s)
+B:Then the result should be false
+T:done: MeasurementSteps.ThenTheResultShouldBePositive("false") (0,0s)
+Scheduler: considering #56 for thread #0
+Scheduler: using #56 for thread #0
+Test #56 is scheduled for thread #0
+Test #55 is finished on thread #0 as Succeeded within 0,0039879 seconds
+Test #56/0 is started on thread #0
+B:Given a valid measurement object with date 1-1-2001
+T:done: MeasurementSteps.GivenAValidMeasurementObjectIsGeneratedWithDate("1-1-2001") (0,0s)
+B:And another measurement object is created with the date 1-1-2000 which is an earlier date
+T:done: MeasurementSteps.GivenAnotherMeasurementObjectIsCreatedWithTheDateWhichIsAnEarlierDate("1-1-2000", "an earlier date") (0,0s)
+B:When i try to check for equality between both measurements
+T:done: MeasurementSteps.WhenITryToCheckForEqualityBetweenBothMeasurements() (0,0s)
+B:Then the result should be false
+T:done: MeasurementSteps.ThenTheResultShouldBePositive("false") (0,0s)
+Scheduler: considering #57 for thread #0
+Scheduler: using #57 for thread #0
+Test #57 is scheduled for thread #0
+Test #56 is finished on thread #0 as Succeeded within 0,005004 seconds
+Test #57/0 is started on thread #0
+B:Given a valid measurement object with date 1-1-2001
+T:done: MeasurementSteps.GivenAValidMeasurementObjectIsGeneratedWithDate("1-1-2001") (0,0s)
+B:And another measurement object is created with the date 1-2-2001 which is a later date
+T:done: MeasurementSteps.GivenAnotherMeasurementObjectIsCreatedWithTheDateWhichIsAnEarlierDate("1-2-2001", "a later date") (0,0s)
+B:When i try to check for equality between both measurements
+T:done: MeasurementSteps.WhenITryToCheckForEqualityBetweenBothMeasurements() (0,0s)
+B:Then the result should be false
+T:done: MeasurementSteps.ThenTheResultShouldBePositive("false") (0,0s)
+Scheduler: considering #58 for thread #0
+Scheduler: using #58 for thread #0
+Test #58 is scheduled for thread #0
+Test #57 is finished on thread #0 as Succeeded within 0,0040037 seconds
+Test #58/0 is started on thread #0
+B:Given a valid measurement object with date 1-1-2001
+T:done: MeasurementSteps.GivenAValidMeasurementObjectIsGeneratedWithDate("1-1-2001") (0,0s)
+B:And another measurement object is created with the date 1-1-2001 which is the same date
+T:done: MeasurementSteps.GivenAnotherMeasurementObjectIsCreatedWithTheDateWhichIsAnEarlierDate("1-1-2001", "the same date") (0,0s)
+B:When i try to check for equality between both measurements
+T:done: MeasurementSteps.WhenITryToCheckForEqualityBetweenBothMeasurements() (0,0s)
+B:Then the result should be true
+T:done: MeasurementSteps.ThenTheResultShouldBePositive("true") (0,0s)
+Test #58 is finished on thread #0 as Succeeded within 0,0058298 seconds
+Appdomain Disposed
+Total: 37
+Succeeded: 37
+Ignored: 0
+Pending: 0
+Skipped: 0
+Failed: 0

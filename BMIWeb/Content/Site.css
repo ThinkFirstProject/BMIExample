@@ -1,0 +1,51 @@
+﻿body {
+    position: relative;
+    background-color: white;
+    border: 0em;
+    color: black;
+    font-size: .85em;
+    font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+    margin: 0em;
+    padding: 0em;
+}
+
+header {
+    background-color: black;
+    color: grey;
+    height: 2em;
+    width: auto;
+    margin: 0em;
+    border: 0.1em solid black;
+}
+
+button {
+    margin: 0.5em 0em 0em 3em;
+}
+
+.headertitle {
+    margin: 0.25em 0em 0em 1em;
+}
+
+.pageTitle {
+    margin: 1.5em 0em 0em 1em;
+    color: black;
+    font-size: 2em;
+}
+
+.overviewTable {
+    margin: 1em 0em 0em 3em;
+    border: 0.1em solid black;
+    -ms-border-radius: 0.25em;
+    border-radius: 0.25em;
+}
+
+.messageField {
+    width: 80%;
+    margin:0 auto;
+    margin-top: 2em;
+}
+
+
+
+
+

@@ -1,0 +1,4 @@
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\NSpec\NSpec_UI\bin\Release\NSpec_UI.dll
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\NSpec\NSpec_UI\bin\Release\NSpec_UI.pdb
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\NSpec\NSpec_UI\obj\Release\NSpec_UI.dll
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\NSpec\NSpec_UI\obj\Release\NSpec_UI.pdb

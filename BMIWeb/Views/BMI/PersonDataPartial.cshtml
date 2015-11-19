@@ -1,0 +1,95 @@
+﻿@using BMIWeb.Models.Def
+@using BMIWeb.Models.WrapperModels
+@model PersonWrapper
+
+<div>
+    @Html.ValidationSummary()
+    @{
+        IDictionary<String, object> attributes = new Dictionary<string, object>();
+
+        attributes.Add("style", "width:9em");
+        
+        if (Model.state == StateDef.ModelState.View)
+        {
+            attributes.Add("disabled", "disabled");
+        }
+        
+        <table style="margin-left:3em">
+            @{
+                if (Model.socialSecurityNumberVisible)
+                {
+                    <tr>
+                        <td>Social Security Number</td>
+                        <td style="width: 2em"></td>
+                        <td>@Html.TextBoxFor(m => m.socialSecurityNumber, @attributes)</td>
+                    </tr>
+                }
+            }
+
+            @{
+                if (Model.birthDateVisible)
+                {
+                    attributes.Add("id", "birthDate");
+                    
+                    <tr>
+                        <td>Birth date</td>
+                        <td style="width: 2em"></td>
+                        <td>@Html.TextBoxFor(m => m.birthDate, @attributes)</td>
+                    </tr>
+                    
+                    attributes.Remove(new KeyValuePair<string, object>("id", "birthDate"));
+                }
+            }
+
+            @{
+                if (Model.genderVisible)
+                {
+                    <tr>
+                        <td>Gender</td>
+                        <td style="width: 2em"></td>
+                        <td>@Html.DropDownListFor(m => m.gender, PersonWrapper.possibleGenders, @attributes)</td>
+                    </tr>
+                }
+            }
+            
+            @{
+                if (Model.state == StateDef.ModelState.View)
+                {
+                    <tr style="height: 2em">
+                    </tr>
+                }
+            }
+            <tr>
+                <td>Length</td>
+                <td style="width:2em"></td>
+                <td>@Html.TextBoxFor(m => m.length, @attributes)</td>
+            </tr>
+            <tr>
+                <td>Weight</td>
+                <td style="width:2em"></td>
+                <td>@Html.TextBoxFor(m => m.weight, @attributes)</td>
+            </tr>
+            @{
+                attributes.Add("id", "measurementDate");
+        
+                <tr>
+                    <td>Measured on</td>
+                    <td style="width:2em"></td>
+                    <td>@Html.TextBoxFor(m => m.date, @attributes)</td>
+                </tr>
+
+                attributes.Remove(new KeyValuePair<string, object>("id", "measurementDate"));
+            }
+            @{
+                if (Model.bmiVisible)
+                {
+                    <tr>
+                        <td>BMI</td>
+                        <td style="width: 2em"></td>
+                        <td>@Html.TextBoxFor(m => m.bmi, @attributes)</td>
+                    </tr>
+                }
+            }
+        </table>
+    }
+</div>

@@ -1,0 +1,27 @@
+﻿@model BMIWeb.Models.WrapperModels.PersonWrapper
+
+@section content {
+   @Scripts.Render("~/Scripts/Custom/AddMeasurement.js")
+    @{
+        List<String> personsdata = ViewBag.personsList;
+        
+        <div>
+            <div class="messageField">
+                @ViewBag.Message
+            </div>
+            @{
+                using (Html.BeginForm(Model))
+                {
+                    Html.RenderPartial("~/Views/BMI/PersonDataPartial.cshtml", Model);
+
+                    <div>
+                        <button type="submit" id="btnAddMeasurement" style="float:left">AddMeasurement</button>
+                        <button type="button" id="btnCancel" style="float:left">Cancel</button>
+                    </div>
+                }
+            }    
+        </div>
+     }
+}
+
+

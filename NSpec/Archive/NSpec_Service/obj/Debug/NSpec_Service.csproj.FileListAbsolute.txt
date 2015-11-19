@@ -1,0 +1,5 @@
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\NSpec\NSpec_Service\bin\Debug\NSpec_Service.dll
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\NSpec\NSpec_Service\bin\Debug\NSpec_Service.pdb
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\NSpec\NSpec_Service\obj\Debug\NSpec_Service.dll
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\NSpec\NSpec_Service\obj\Debug\NSpec_Service.pdb
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\NSpec\NSpec_Service\obj\Debug\NSpec_Service.csprojResolveAssemblyReference.cache

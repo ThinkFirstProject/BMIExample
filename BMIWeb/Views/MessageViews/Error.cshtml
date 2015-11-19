@@ -1,0 +1,14 @@
+﻿
+@section content {
+   @Scripts.Render("~/Scripts/Custom/Message.js")
+    
+    <div>
+        <div class="messageField">
+            @ViewBag.Message   
+        </div>
+        <div>
+            <button type="button" id="btnOK" style="width:4em; margin-left:3em">OK</button>
+        </div>
+    </div>
+}
+

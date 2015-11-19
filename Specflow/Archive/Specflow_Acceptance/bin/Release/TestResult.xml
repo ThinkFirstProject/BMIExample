@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="D:\Elektromap\KHLim\I-net\ThinkFirst\WP2 Ontwikkel-implementatie onderzoek\C# Voorbeeld\BMIExample\BMITestSpecFlow\bin\Release\BMITestSpecFlow.dll" total="29" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2014-02-18" time="15:02:44">
+  <environment nunit-version="2.6.3.13283" clr-version="2.0.50727.8000" os-version="Microsoft Windows NT 6.2.9200.0" platform="Win32NT" cwd="C:\Program Files (x86)\NUnit 2.6.3\bin" machine-name="PC_BART_SALMON" user="Bart" user-domain="PC_BART_SALMON" />
+  <culture-info current-culture="nl-BE" current-uiculture="nl-NL" />
+  <test-suite type="Assembly" name="D:\Elektromap\KHLim\I-net\ThinkFirst\WP2 Ontwikkel-implementatie onderzoek\C# Voorbeeld\BMIExample\BMITestSpecFlow\bin\Release\BMITestSpecFlow.dll" executed="True" result="Success" success="True" time="1.405" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="BMITestSpecFlow" executed="True" result="Success" success="True" time="1.387" asserts="0">
+        <results>
+          <test-suite type="TestFixture" name="MaintainPersonDataFeatureFeature" description="MaintainPersonDataFeature" executed="True" result="Success" success="True" time="1.306" asserts="0">
+            <categories>
+              <category name="Person" />
+            </categories>
+            <results>
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.AMeasurementIsAddedToThePersonObjectWhichIsNull" description="A measurement is added to the person object which is null" executed="True" result="Success" success="True" time="0.653" asserts="1" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.AMeasurementIsRemovedFromThePersonObjectWhichIsNull" description="A measurement is removed from the person object which is null" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.ANewValidMeasurementIsAddedToThePersonObject" description="A new valid measurement is added to the person object" executed="True" result="Success" success="True" time="0.014" asserts="2" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.APersonObjectIsCheckedForEqualityWithAnotherPersonObjectWithADifferentSocialSecurityNumber" description="A person object is checked for equality with another person object with a different social security number" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.APersonObjectIsCheckedForEqualityWithAnotherPersonObjectWithTheSameSocialSecurityNumber" description="A person object is checked for equality with another person object with the same social security number" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.AValidMeasurementIsRemovedFromThePersonObject" description="A valid measurement is removed from the person object" executed="True" result="Success" success="True" time="0.003" asserts="3" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.PersonCreatedWithValidBirthdateGenderAndMeasurement_ButWithASocialSecurityNumberWhichIsEmpty" description="Person created with valid birthdate,gender and measurement. But with a social security number which is empty" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.PersonCreatedWithValidBirthdateGenderAndMeasurement_ButWithASocialSecurityNumberWhichIsNull" description="Person created with valid birthdate,gender and measurement. But with a social security number which is null" executed="True" result="Success" success="True" time="0.002" asserts="1" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.PersonCreatedWithValidBirthdateGenderAndSocialSecurityNumber_ButWithAMeasurementWhichIsNull" description="Person created with valid birthdate,gender and social security number. But with a measurement which is null" executed="True" result="Success" success="True" time="0.002" asserts="1" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.PersonCreatedWithValidSocialSecurityNumberBirthdateGenderAndMeasurement" description="Person created with valid social security number,birthdate,gender and measurement" executed="True" result="Success" success="True" time="0.005" asserts="4" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.PersonIsModifiedWithANewValidSocialSecurityNumberWhichIsNull" description="Person is modified with a new valid social security number which is null" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.PersonIsModifiedWithASocialSecurityNumberWhichIsEmpty" description="Person is modified with a social security number which is empty" executed="True" result="Success" success="True" time="0.002" asserts="1" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.PersonIsModifiedWithASocialSecurityNumberWhichIsNull" description="Person is modified with a social security number which is null" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.PersonIsModifiedWithAValidBirthdate" description="Person is modified with a valid birthdate" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.PersonIsModifiedWithAValidGender" description="Person is modified with a valid gender" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.TheBMIIsCalculatedOfTheMostRecentMeasurement" description="The BMI is calculated of the most recent measurement" executed="True" result="Success" success="True" time="0.004" asserts="2" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.TheMostRecentLengthIsRequested" description="The most recent length is requested" executed="True" result="Success" success="True" time="0.003" asserts="2" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.TheMostRecentMeasurementIsRequested" description="The most recent measurement is requested" executed="True" result="Success" success="True" time="0.004" asserts="2" />
+              <test-case name="BMITestSpecFlow.MaintainPersonDataFeatureFeature.TheMostRecentWeightIsRequested" description="The most recent weight is requested" executed="True" result="Success" success="True" time="0.002" asserts="2" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="MeasurementFeatureFeature" description="MeasurementFeature" executed="True" result="Success" success="True" time="0.073" asserts="0">
+            <categories>
+              <category name="Measurement" />
+            </categories>
+            <results>
+              <test-suite type="ParameterizedTest" name="MeasurementIsCreatedWithValidLengthAndConstantValidWeightAndDate" description="Measurement is created with valid length and constant valid weight and date" executed="True" result="Success" success="True" time="0.029" asserts="0">
+                <results>
+                  <test-case name="BMITestSpecFlow.MeasurementFeatureFeature.MeasurementIsCreatedWithValidLengthAndConstantValidWeightAndDate(&quot;NORMAL_LENGTH&quot;,&quot;180&quot;,null)" executed="True" result="Success" success="True" time="0.015" asserts="3" />
+                  <test-case name="BMITestSpecFlow.MeasurementFeatureFeature.MeasurementIsCreatedWithValidLengthAndConstantValidWeightAndDate(&quot;JUST_SMALL_ENOUGH_LENGTH&quot;,&quot;275&quot;,null)" executed="True" result="Success" success="True" time="0.000" asserts="3" />
+                  <test-case name="BMITestSpecFlow.MeasurementFeatureFeature.MeasurementIsCreatedWithValidLengthAndConstantValidWeightAndDate(&quot;JUST_BIG_ENOUGH_LENGTH&quot;,&quot;25&quot;,null)" executed="True" result="Success" success="True" time="0.000" asserts="3" />
+                </results>
+              </test-suite>
+              <test-suite type="ParameterizedTest" name="MeasurementIsModifiedWithAnInvalidLengthValue_" description="Measurement is modified with an invalid length value." executed="True" result="Success" success="True" time="0.018" asserts="0">
+                <results>
+                  <test-case name="BMITestSpecFlow.MeasurementFeatureFeature.MeasurementIsModifiedWithAnInvalidLengthValue_(&quot;LOT_TO_BIG_LENGTH&quot;,&quot;300&quot;,null)" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                  <test-case name="BMITestSpecFlow.MeasurementFeatureFeature.MeasurementIsModifiedWithAnInvalidLengthValue_(&quot;LOT_TO_SMALL_LENGTH&quot;,&quot;15&quot;,null)" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                  <test-case name="BMITestSpecFlow.MeasurementFeatureFeature.MeasurementIsModifiedWithAnInvalidLengthValue_(&quot;BIT_TO_BIG_LENGTH&quot;,&quot;276&quot;,null)" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                  <test-case name="BMITestSpecFlow.MeasurementFeatureFeature.MeasurementIsModifiedWithAnInvalidLengthValue_(&quot;BIT_TO_SMALL_LENGTH&quot;,&quot;24&quot;,null)" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                </results>
+              </test-suite>
+              <test-suite type="ParameterizedTest" name="MeasurementIsModifiedWithValidLengthValue_" description="Measurement is modified with valid length value." executed="True" result="Success" success="True" time="0.012" asserts="0">
+                <results>
+                  <test-case name="BMITestSpecFlow.MeasurementFeatureFeature.MeasurementIsModifiedWithValidLengthValue_(&quot;JUST_SMALL_ENOUGH_LENGTH&quot;,&quot;275&quot;,null)" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                  <test-case name="BMITestSpecFlow.MeasurementFeatureFeature.MeasurementIsModifiedWithValidLengthValue_(&quot;OTHER_NORMAL_LENGTH&quot;,&quot;190&quot;,null)" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                  <test-case name="BMITestSpecFlow.MeasurementFeatureFeature.MeasurementIsModifiedWithValidLengthValue_(&quot;JUST_BIG_ENOUGH_LENGTH&quot;,&quot;25&quot;,null)" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

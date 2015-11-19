@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<DSBMI xmlns="http://tempuri.org/DSBMI.xsd">
+  <Person>
+    <SocialSecurityNumber>123456789</SocialSecurityNumber>
+    <BirthDate>1986-05-02T00:00:00</BirthDate>
+    <Gender>Male</Gender>
+  </Person>
+  <Measurement>
+    <MeasurementID>1</MeasurementID>
+    <SocialSecurityNumber>123456789</SocialSecurityNumber>
+    <Length>180</Length>
+    <Weight>65000</Weight>
+    <Date>2015-08-25T00:00:00</Date>
+  </Measurement>
+</DSBMI>

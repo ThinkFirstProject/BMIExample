@@ -1,0 +1,5 @@
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\NSpec\NSpecAcceptance\bin\Debug\NSpec_Unit.dll
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\NSpec\NSpecAcceptance\bin\Debug\NSpec_Unit.pdb
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\NSpec\NSpecAcceptance\obj\Debug\NSpec_Unit.dll
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\NSpec\NSpecAcceptance\obj\Debug\NSpec_Unit.pdb
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\NSpec\NSpecAcceptance\obj\Debug\NSpec_Unit.csprojResolveAssemblyReference.cache

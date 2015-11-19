@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BMI.Containers.Identifiable">
+    <Position X="9.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Containers\Identifiable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BMI.Containers.Measurement">
+    <Position X="11.75" Y="3.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAABgAAAAACAAAQABEAABAAAAAAAAAAgBAAAAQAAAAA=</HashCode>
+      <FileName>Containers\Measurement.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BMI.Def.PersonDef" Collapsed="true">
+    <Position X="3" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Def\PersonDef.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BMI.Person">
+    <Position X="6.75" Y="2.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAkIAAAACMAEiABAAAhAAAAACEABAAEQAAAgAgAyA=</HashCode>
+      <FileName>Person.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BMI.PersonManager">
+    <Position X="2.75" Y="4" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAgAAABAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>PersonManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BMI.Properties.Settings" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAACAAAAAAABAAAAAAIAAAAAABAAAAAAAQAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

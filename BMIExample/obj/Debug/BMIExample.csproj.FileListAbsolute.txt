@@ -1,0 +1,12 @@
+C:\Users\Bart\AppData\Local\Temporary Projects\BMIExample\bin\Debug\BMIExample.exe.config
+B:\Elektromap\KHLim\I-net\ThinkFirst\WP2 Ontwikkel-implementatie onderzoek\C# Voorbeeld\BMIExample\BMIExample\bin\Debug\BMIExample.exe.config
+B:\Elektromap\KHLim\I-net\ThinkFirst\WP2 Ontwikkel-implementatie onderzoek\C# Voorbeeld\BMIExample\BMIExample\bin\Debug\BMIExample.exe
+B:\Elektromap\KHLim\I-net\ThinkFirst\WP2 Ontwikkel-implementatie onderzoek\C# Voorbeeld\BMIExample\BMIExample\bin\Debug\BMIExample.pdb
+B:\Elektromap\KHLim\I-net\ThinkFirst\WP2 Ontwikkel-implementatie onderzoek\C# Voorbeeld\BMIExample\BMIExample\obj\Debug\BMIExample.csprojResolveAssemblyReference.cache
+B:\Elektromap\KHLim\I-net\ThinkFirst\WP2 Ontwikkel-implementatie onderzoek\C# Voorbeeld\BMIExample\BMIExample\obj\Debug\BMIExample.Properties.Resources.resources
+B:\Elektromap\KHLim\I-net\ThinkFirst\WP2 Ontwikkel-implementatie onderzoek\C# Voorbeeld\BMIExample\BMIExample\obj\Debug\BMIExample.csproj.GenerateResource.Cache
+B:\Elektromap\KHLim\I-net\ThinkFirst\WP2 Ontwikkel-implementatie onderzoek\C# Voorbeeld\BMIExample\BMIExample\obj\Debug\BMIExample.exe
+B:\Elektromap\KHLim\I-net\ThinkFirst\WP2 Ontwikkel-implementatie onderzoek\C# Voorbeeld\BMIExample\BMIExample\obj\Debug\BMIExample.pdb
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\BMIExample\bin\Debug\BMIExample.exe.config
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\BMIExample\obj\Debug\BMIExample.exe
+D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\BMIExample\obj\Debug\BMIExample.pdb

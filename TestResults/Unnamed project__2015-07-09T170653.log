@@ -1,0 +1,33 @@
+﻿VS filter: testpath:TestAssembly:Unit/Feature:Specifications+for+a+measurement/Scenario:A+new+measurement+can+be+created+with+a+length%2c+a+weight+and+a+date%2c+Variant+0
+Appdomain Disposed
+Test Suite Dump
+#0: Unnamed project/ - 
+#1: Default - 
+#2: Unit - 
+#3: Specifications for a measurement - 
+#4: A new measurement can be created with a length, a weight and a date, Variant 0 - TestAssembly:Unit/Feature:Specifications+for+a+measurement/Scenario:A+new+measurement+can+be+created+with+a+length%2c+a+weight+and+a+date%2c+Variant+0
+End: Test Suite Dump
+Scheduler: considering #4 for thread #0
+Scheduler: using #4 for thread #0
+Test #4 is scheduled for thread #0
+Thread #0: creating new test thread executor for Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null (target: Default)
+Loading SpecRun type 'TechTalk.SpecRun.Framework.TestAssemblyExecutor' from: C:\Users\Bart\AppData\Local\Temp\VisualStudioTestExplorerExtensions\SpecRun.Runner.1.2.0\tools\TechTalk.SpecRun.Framework.Executor.dll
+Test #4/0 is started on thread #0
+B:When I want to make a new measurement with length 180, weight 75000 and date 12-12-2012
+T:done: SpecificationsForAMeasurementSteps.WhenIWantToMakeANewMeasurementWithLengthWeightAndDate(180, 75000, "12-12-2012") (0,0s)
+B:Then A new measurement is created
+T:done: SpecificationsForAMeasurementSteps.ThenANewMeasurementIsCreated() (0,0s)
+B:And the length is 180
+T:done: SpecificationsForAMeasurementSteps.ThenTheLengthIs(180) (0,0s)
+B:And the weight is 75000
+T:done: SpecificationsForAMeasurementSteps.ThenTheWeightIs(75000) (0,0s)
+B:And the date is 12-12-2012
+T:done: SpecificationsForAMeasurementSteps.ThenTheDateIs("12-12-2012") (0,0s)
+Test #4 is finished on thread #0 as Succeeded within 0,2436517 seconds
+Appdomain Disposed
+Total: 1
+Succeeded: 1
+Ignored: 0
+Pending: 0
+Skipped: 0
+Failed: 0

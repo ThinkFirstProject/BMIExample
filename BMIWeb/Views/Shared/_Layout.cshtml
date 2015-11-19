@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>BMI</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        @Styles.Render("~/Content/css")
+        @Styles.Render("~/Content/themes/base/jquery-ui.css")
+        @Scripts.Render("~/bundles/modernizr")
+        @Scripts.Render("~/Scripts/jquery-2.1.0.js")
+        @Scripts.Render("~/Scripts/jquery-ui-1.10.4.js")
+    </head>
+    <body>
+        <header>
+            <div class="headertitle">
+                BMI
+            </div>      
+        </header>
+        
+        <div class="pageTitle">
+            <b>@ViewBag.Title</b>
+        </div>
+
+        <div id="body">
+            @RenderSection("content", required: false)
+        </div>
+    </body>
+</html>

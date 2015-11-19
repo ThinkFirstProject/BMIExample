@@ -1,0 +1,4256 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+<html>
+	<head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<title>BMIUnit Test Execution Report</title>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript">
+            /**
+            * jQuery.fn.sortElements
+            * --------------
+            * #author James Padolsey (http://james.padolsey.com)
+            * #version 0.11
+            * #updated 18-MAR-2010
+            * #url https://raw.github.com/jamespadolsey/jQuery-Plugins/master/sortElements/jquery.sortElements.js
+            * --------------
+            * #param Function comparator:
+            *   Exactly the same behaviour as [1,2,3].sort(comparator)
+            *   
+            * #param Function getSortable
+            *   A function that should return the element that is
+            *   to be sorted. The comparator will run on the
+            *   current collection, but you may want the actual
+            *   resulting sort to occur on a parent or another
+            *   associated element.
+            *   
+            *   E.g. $('td').sortElements(comparator, function(){
+            *      return this.parentNode; 
+            *   })
+            *   
+            *   The <td>'s parent (<tr>) will be sorted instead
+            *   of the <td> itself.
+            */
+            jQuery.fn.sortElements = (function () {
+
+                var sort = [].sort;
+
+                return function (comparator, getSortable) {
+
+                    getSortable = getSortable || function () { return this; };
+
+                    var placements = this.map(function () {
+
+                        var sortElement = getSortable.call(this),
+                parentNode = sortElement.parentNode,
+
+                        // Since the element itself will change position, we have
+                        // to have some way of storing it's original position in
+                        // the DOM. The easiest way is to have a 'flag' node:
+                nextSibling = parentNode.insertBefore(
+                    document.createTextNode(''),
+                    sortElement.nextSibling
+                );
+
+                        return function () {
+
+                            if (parentNode === this) {
+                                throw new Error(
+                        "You can't sort elements if any one is a descendant of another."
+                    );
+                            }
+
+                            // Insert before flag:
+                            parentNode.insertBefore(this, nextSibling);
+                            // Remove flag:
+                            parentNode.removeChild(nextSibling);
+
+                        };
+
+                    });
+
+                    return sort.call(this, comparator).each(function (i) {
+                        placements[i].call(getSortable.call(this));
+                    });
+
+                };
+
+            })();
+        </script>
+        <script type="text/javascript">
+            jQuery.fn.setBarSizes = (function () {
+                return function (metricName, maxBarSize, min) {
+                    var max = Math.max.apply(Math, $.makeArray($(this).map(function () { return Number($(this).attr('data-sr-' + metricName)); })));
+                    var scale = 1.0;
+                    while (max > 0.0 && max <= 10.0) {
+                        scale = scale * 10.0;
+                        max = max * 10.0;
+                    }
+                    max = (Math.ceil(max / 2) * 2) / scale;
+
+                    this.each(function () {
+                        var barAnchor = $(this).find('a');
+                        var actual = $(this).attr('data-sr-' + metricName);
+                        var newHeight = Math.max(Math.round(maxBarSize * (actual - min) / (max - min)), 2);
+                        barAnchor.css({ height: newHeight });
+                    });
+
+                    var unit = "";
+                    if (metricName.substr(metricName.length - 4, 4) === "time")
+                        unit = "s";
+
+                    $('#testview .scale-min-label').each(function () {
+                        $(this).text(min.toString() + unit);
+                    });
+                    $('#testview .scale-max-label').each(function () {
+                        $(this).text(max.toString() + unit);
+                    });
+                    var mid = max / 2;
+                    $('#testview .scale-mid-label').each(function () {
+                        $(this).text(mid.toString() + unit);
+                    });
+                };
+            })();
+
+            function getComparer(metricName, isDesc) {
+                return function (a, b) {
+                    var aNumber = Number($(a).attr('data-sr-' + metricName));
+                    var bNumber = Number($(b).attr('data-sr-' + metricName));
+                    var result = aNumber > bNumber ? 1 : (aNumber < bNumber ? -1 : 0);
+                    if (isDesc)
+                        result = -1 * result;
+
+                    if (result == 0 && metricName != "order")
+                        result = getComparer("order", false)(a, b);
+
+                    return result;
+                };
+            }
+
+            var currentSort = "";
+            function doSort(allowToggleDesc) {
+                var newSort = $("input[name='barSortOrder']:checked").val();
+                if (allowToggleDesc && currentSort == newSort) {
+                    $('#barSortDesc').click();
+                    doSort(false);
+                    return;
+                }
+                currentSort = newSort;
+                $('#testview td.testview-item').sortElements(getComparer(newSort, $('#barSortDesc').is(':checked')));
+            }
+
+
+            function doSetHeights(allowSort) {
+                var selectedMetric = $("input[name='barHeight']:checked").val();
+                $('#testview td.testview-item').setBarSizes(selectedMetric, 60, 0.0);
+
+                if (allowSort && currentSort != selectedMetric) {
+                    var $radios = $("input[name='barSortOrder']");
+                    $radios.filter('[value=' + selectedMetric + ']').attr('checked', true);
+                    $("#barSortDesc").attr("checked", [true]);
+                    doSort(false);
+                }
+            }
+
+            $(document).ready(function () {
+                $("input[name='barSortOrder']").click(function () { doSort(true); return true; });
+                $("input[name='barSortDesc']").change(function () { doSort(false); });
+                $("input[name='barHeight']").change(function () { doSetHeights(true); });
+
+                doSort(false);
+                doSetHeights(false);
+
+                $("div.scrollable").css({ 'overflow': 'auto' });
+            });
+        </script>
+
+        <style type="text/css">
+            body 
+            {
+                color: #000000;
+                font-family: Arial,Liberation Sans,DejaVu Sans,sans-serif;
+                line-height: 130%;
+            }
+            h1 {
+                font-family: Trebuchet MS,Liberation Sans,DejaVu Sans,sans-serif;
+                font-size: 170%;
+                font-weight: bold;
+            }            
+            h2 {
+                font-family: Trebuchet MS,Liberation Sans,DejaVu Sans,sans-serif;
+                font-size: 130%;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }            
+            h3 {
+                font-family: Trebuchet MS,Liberation Sans,DejaVu Sans,sans-serif;
+                font-size: 120%;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }            
+            a.bar
+            {
+                text-decoration: none;
+                display: block;
+                line-height: 1px;
+            }
+            .description
+            {
+                font-style: italic;
+            }
+            .log 
+            {
+                width: 600px;
+                white-space: pre-wrap;
+                display: block;
+                margin: 0px;
+            }
+            .errorMessage 
+            {
+                width: 600px;
+                color: Red;
+                font-weight: bold;
+            }
+            .stackTrace 
+            {
+                width: 600px;
+                white-space: pre-wrap;
+                font-style: italic;
+                color: Red;
+                display: block;
+            }
+            table.testEvents
+            {
+                border: solid 1px #e8eef4;
+                border-collapse: collapse;
+            }
+            table.testEvents td
+            {
+                vertical-align: top;
+                padding: 5px;
+                border: solid 1px #e8eef4;
+            }
+            table.testEvents th
+            {
+                padding: 6px 5px;
+                text-align: left;
+                background-color: #e8eef4;
+                border: solid 1px #e8eef4;                
+            }
+            .comment
+            {
+                font-style: italic;
+                font-size: smaller;
+            }
+            .startupBar
+            {
+                background-color: #EEEEEE;
+                cursor: default;
+            }
+            
+            .colorSucceeded
+            {
+                background-color: #90ED7B;
+            }
+            .colorIgnored
+            {
+                background-color: #FFFF85;
+            }
+            .colorPending
+            {
+                background-color: #D47BED;
+            }
+            .colorNothingToRun
+            {
+                background-color: #CCCCFF;
+            }
+            .colorSkipped
+            {
+                background-color: #CCCCFF;
+            }
+            .colorInconclusive
+            {
+                background-color: #7BEDED;
+            }
+            .colorCleanupFailed
+            {
+                background-color: #FFCCCC;
+            }
+            .colorRandomlyFailed
+            {
+                background-color: #EDB07B;
+            }
+            .colorFailed
+            {
+                background-color: #ED5F5F;
+            }
+            .colorInitializationFailed
+            {
+                background-color: #FF0000;
+            }
+            .colorFrameworkError
+            {
+                background-color: #FF0000;
+            }
+            ul.subNodeLinks
+            {
+                padding-left: 20px;
+                margin: 0px;
+            }
+            ul.subNodeLinks li
+            {
+                list-style: none;
+            }
+            
+            /* views general */
+            div.scrollable
+            {
+                /*overflow: auto; - thsi has to be set from js, because of an IE9 bug */
+            }
+            div.viewbox
+            {
+                position: relative;
+                border: 3px solid #e8eef4;
+            }
+            div.viewbox table
+            {
+                border: 0px;
+            }
+                        
+            /* testview */
+            #testview
+            {
+                padding-top: 23px;
+            }
+            
+            table.testview-items td
+            {
+                vertical-align: bottom;
+                padding: 0px 1px 0px 1px;
+            }
+            td.right-padding, td.left-padding
+            {
+                width: 25px;
+                min-width: 25px;
+            }
+            table.testview-items a.bar
+            {
+                width: 5px;
+            }
+            table.testview-items tr.testview-items-row
+            {
+                height: 60px;
+            }
+            
+            /* scale */
+            table.vertical-scale 
+            {
+                position: absolute;
+                top: 23px;
+                left: 0px;
+                width: 100%;
+                z-index: -100;
+            }
+            table.vertical-scale td, tr.horizontal-scale td
+            {
+                font-size: 60%;
+                line-height: normal;
+            }
+            table.vertical-scale tr.scale-max, table.vertical-scale tr.scale-mid 
+            {
+                height: 30px;
+            }
+            tr.horizontal-scale, table.vertical-scale tr.scale-min 
+            {
+                height: 12px;
+            }
+            
+            td.scale-max-label, td.scale-mid-label, td.scale-min-label
+            {
+                border-top: solid 1px #E6E6E6;
+                text-align: left;
+                vertical-align: top;
+            }
+            td.scale-10-label
+            {
+                border-left: solid 1px #E6E6E6;
+                text-align: left;
+                vertical-align: bottom;
+                padding-left: 1px;
+            }
+            tr.scale-mid td, tr.scale-min td, tr.scale-max td
+            {
+                border-top: solid 1px #E6E6E6;
+            }
+           
+            
+            /* bar-control */
+            #bar-control
+            {
+                font-size: 60%;
+                line-height: normal;
+                position: absolute;
+                right: 0px;
+                top: 0px;
+            }
+            #bar-control label
+            {
+                font-weight: bold;
+                vertical-align: middle;
+            }
+            #bar-control .option
+            {
+                vertical-align: middle;
+                text-transform: lowercase;
+            }
+            #bar-control input[type="checkbox"]
+            {
+                padding: 0 2px 0 3px;
+            }
+            #bar-control input
+            {
+                vertical-align: top;
+                height: 12px;
+                margin: 0px;
+                padding: 0px;
+            }
+            #bar-control div
+            {
+                float: right;
+                margin: 3px 5px 3px 5px;
+            }
+            
+            
+            /* timeline view */
+            #timelineview
+            {
+                padding-top: 5px;
+            }
+            table.timelineview a
+            {
+                height: 20px;
+            }
+            table.timelineview td
+            {
+                vertical-align: bottom;
+                padding: 0px 1px 0px 0px;
+                border: 0px;
+            }
+            tr.thread-items-row
+            {
+                height: 25px;
+            }
+            tr.thread-items-row td
+            {
+                vertical-align: bottom;
+            }
+            td.thread-label
+            {
+                padding: 0px 6px 0px 6px;
+                text-align: right;
+                line-height: 18px;
+                vertical-align: bottom;
+            }
+            th.thread-label
+            {
+                padding: 3px 6px 0px 6px;
+                line-height: 18px;
+                text-align: left;
+                vertical-align: bottom;
+            }
+        </style>
+	</head>
+	<body>
+        <h1>BMIUnit Test Execution Report</h1>
+        <ul>
+            <li>Project: BMIUnit</li>
+            <li>Configuration: Default</li>
+            <li>Test Assemblies: D:\Elektromap\KHLimCo-op\net\WP3 Onwtikkel-implementatie onderzoek 1\BMIExample\Specflow\Specflow_Unit\bin\Debug\Specflow_Unit.dll</li>
+            <li>Start Time: 1/07/2015 16:43:16</li>
+            <li>Duration: 00:00:00.6196299</li>
+            <li>Test Threads: 1</li>
+        </ul>
+
+        <h2>Result: all tests passed</h2>
+        <table class="testEvents">
+                <tr>
+        <th colspan="2">Success rate</th>
+        <th>Tests</th>
+        <th>Succeeded</th>
+        <th>Failed</th>
+        <th>Pending</th>
+        <th>Ignored</th>
+        <th>Skipped</th>
+    </tr>
+
+                <tr>
+            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="37 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>37</td>
+    <td>37</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+    </tr>
+
+        </table>
+        
+        <h2>Test Timeline Summary</h2>
+        <div id="timelineview" class="viewbox">
+            <div class="scrollable">
+                <table cellpadding="0" cellspacing="0">
+                    <tr>
+                        <th class="thread-label" colspan="2">thread</th>
+                    </tr>
+                        <tr class="thread-items-row">
+                            <td class="thread-label" title="Machine: PC-BART-SALMON">#0</td>
+                            <td colspan="1">
+                                <table class="timelineview" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                            <td>
+        <a
+            class="bar startupBar" 
+            style="width: 38px;" 
+                title="test thread startup" 
+        >&nbsp;</a>
+    </td>
+
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 134px;" 
+                title="A new measurement object can be created, normal length (in Measurement)" 
+                href="#t996628626.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A new measurement object can be created, just big enough length (in Measurement)" 
+                href="#t-928247113.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A new measurement object can be created, just small enough length (in Measurement)" 
+                href="#t-1903920427.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A new measurement object can be created, normal weight (in Measurement)" 
+                href="#t1444664520.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A new measurement object can be created, just big enough weight (in Measurement)" 
+                href="#t-701508693.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A new measurement object can be created, just small enough weight (in Measurement)" 
+                href="#t222591681.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="When creating a measurement object, the length has to be valid, lot to small length (in Measurement)" 
+                href="#t-1276330586.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="When creating a measurement object, the length has to be valid, bit to small length (in Measurement)" 
+                href="#t1391523140.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="When creating a measurement object, the length has to be valid, bit to big length (in Measurement)" 
+                href="#t-488015098.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="When creating a measurement object, the length has to be valid, lot to big length (in Measurement)" 
+                href="#t-705620906.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="When creating a measurement object, the weight has to be valid, lot to small weight (in Measurement)" 
+                href="#t-1581630375.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="When creating a measurement object, the weight has to be valid, bit to small weight (in Measurement)" 
+                href="#t359054638.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="When creating a measurement object, the weight has to be valid, bit to big weight (in Measurement)" 
+                href="#t-1449337509.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="When creating a measurement object, the weight has to be valid, lot to big weight (in Measurement)" 
+                href="#t-1327212608.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A measurements length can be modified, OTHER_normal length (in Measurement)" 
+                href="#t-1303208578.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A measurements length can be modified, just big enough length (in Measurement)" 
+                href="#t-998877372.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A measurements length can be modified, just small enough length (in Measurement)" 
+                href="#t75420574.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A measurements weight can be modified, OTHER_normal weight (in Measurement)" 
+                href="#t-81517968.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A measurements weight can be modified, just big enough weight (in Measurement)" 
+                href="#t-318792224.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A measurements weight can be modified, just small enough weight (in Measurement)" 
+                href="#t-1244266775.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="When modifying the length of a measurement, the length should be valid, lot to small length (in Measurement)" 
+                href="#t-847448237.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="When modifying the length of a measurement, the length should be valid, bit to small length (in Measurement)" 
+                href="#t207390637.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="When modifying the length of a measurement, the length should be valid, bit to big length (in Measurement)" 
+                href="#t-691533353.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="When modifying the length of a measurement, the length should be valid, lot to big length (in Measurement)" 
+                href="#t-962308033.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="When modifying the weight of a measurement, the weight should be valid, lot to small weight (in Measurement)" 
+                href="#t2140541137.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="When modifying the weight of a measurement, the weight should be valid, bit to small weight (in Measurement)" 
+                href="#t23862631.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="When modifying the weight of a measurement, the weight should be valid, bit to big weight (in Measurement)" 
+                href="#t-947105627.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="When modifying the weight of a measurement, the weight should be valid, lot to big weight (in Measurement)" 
+                href="#t-706321111.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A measurement can be modified with a new date (in Measurement)" 
+                href="#t-1711509919.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A measurement can be compared to a measurement which is null (in Measurement)" 
+                href="#t1149601742.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A measurement can be compared to another measurement, an earlier date (in Measurement)" 
+                href="#t1042332343.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A measurement can be compared to another measurement, a later date (in Measurement)" 
+                href="#t1107683498.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A measurement can be compared to another measurement, the same date (in Measurement)" 
+                href="#t778951728.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A measurement can be checked for equality to a measurement which is null (in Measurement)" 
+                href="#t-179055047.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A measurement can be checked for equality to another measurement, an earlier date (in Measurement)" 
+                href="#t278123935.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A measurement can be checked for equality to another measurement, a later date (in Measurement)" 
+                href="#t492844115.0"
+        >&nbsp;</a>
+    </td>
+    <td>
+        <a
+            class="bar colorSucceeded" 
+            style="width: 3px;" 
+                title="A measurement can be checked for equality to another measurement, the same date (in Measurement)" 
+                href="#t1897568053.0"
+        >&nbsp;</a>
+    </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    <tr class="horizontal-scale">
+                        <td>&nbsp;</td>
+                        <td class="scale-10-label">0s</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <h2>Test Result View</h2>
+        <div id="testview" class="viewbox">
+            <div id="bar-control">
+                <div id="bar-control-sort">
+                    <label>sort by:</label>
+                    <span class="option"><input type="radio" name="barSortOrder" value="exectime" />Time</span>
+                    <span class="option"><input type="radio" name="barSortOrder" value="acttime" />Act Time</span>
+                    <span class="option"><input type="radio" name="barSortOrder" value="order" />Execution</span>
+                    <span class="option"><input type="radio" name="barSortOrder" value="rescode" checked="checked" />Result</span>
+                    <span class="option"><input type="checkbox" name="barSortDesc" id="barSortDesc" checked="checked" />desc</span>
+                </div>
+                <div id="bar-control-heights">
+                    <label>heights:</label>
+                    <span class="option"><input type="radio" checked="checked" name="barHeight" value="exectime" />Time</span>
+                    <span class="option"><input type="radio" name="barHeight" value="acttime" />Act Time</span>
+                    
+                </div>
+            </div>
+            <table class="vertical-scale" cellpadding="0" cellspacing="0">
+                <tr class="scale-max">
+                    <td class="left-padding scale-max-label">&nbsp;</td>
+                    <td colspan="37">&nbsp;</td>
+                    <td class="right-padding">&nbsp;</td>
+                </tr>
+                <tr class="scale-mid">
+                    <td class="left-padding scale-mid-label">&nbsp;</td>
+                    <td colspan="37">&nbsp;</td>
+                    <td class="right-padding">&nbsp;</td>
+                </tr>
+                <tr class="scale-min">
+                    <td class="left-padding scale-min-label">&nbsp;</td>
+                    <td colspan="37">&nbsp;</td>
+                    <td class="right-padding">&nbsp;</td>
+                </tr>
+            </table>
+            <div class="scrollable">
+                <table class="testview-items" cellpadding="0" cellspacing="0">
+                    <tr class="testview-items-row">
+                        <td class="left-padding">&nbsp;</td>
+    <td class="testview-item" 
+        data-sr-exectime="0.2657555" data-sr-rescode="110" data-sr-order="0" data-sr-acttime="0.068">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 60px;"
+            title="A new measurement object can be created, normal length (in Measurement)"
+            href="#t996628626.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0059871" data-sr-rescode="110" data-sr-order="1" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A new measurement object can be created, just big enough length (in Measurement)"
+            href="#t-928247113.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0060038" data-sr-rescode="110" data-sr-order="2" data-sr-acttime="0.0">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A new measurement object can be created, just small enough length (in Measurement)"
+            href="#t-1903920427.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0050053" data-sr-rescode="110" data-sr-order="3" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A new measurement object can be created, normal weight (in Measurement)"
+            href="#t1444664520.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0070054" data-sr-rescode="110" data-sr-order="4" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A new measurement object can be created, just big enough weight (in Measurement)"
+            href="#t-701508693.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.006006" data-sr-rescode="110" data-sr-order="5" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A new measurement object can be created, just small enough weight (in Measurement)"
+            href="#t222591681.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0080078" data-sr-rescode="110" data-sr-order="6" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="When creating a measurement object, the length has to be valid, lot to small length (in Measurement)"
+            href="#t-1276330586.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0040024" data-sr-rescode="110" data-sr-order="7" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="When creating a measurement object, the length has to be valid, bit to small length (in Measurement)"
+            href="#t1391523140.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0050053" data-sr-rescode="110" data-sr-order="8" data-sr-acttime="0.002">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="When creating a measurement object, the length has to be valid, bit to big length (in Measurement)"
+            href="#t-488015098.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0040032" data-sr-rescode="110" data-sr-order="9" data-sr-acttime="0.0">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="When creating a measurement object, the length has to be valid, lot to big length (in Measurement)"
+            href="#t-705620906.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0060043" data-sr-rescode="110" data-sr-order="10" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="When creating a measurement object, the weight has to be valid, lot to small weight (in Measurement)"
+            href="#t-1581630375.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0050211" data-sr-rescode="110" data-sr-order="11" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="When creating a measurement object, the weight has to be valid, bit to small weight (in Measurement)"
+            href="#t359054638.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0059871" data-sr-rescode="110" data-sr-order="12" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="When creating a measurement object, the weight has to be valid, bit to big weight (in Measurement)"
+            href="#t-1449337509.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0050019" data-sr-rescode="110" data-sr-order="13" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="When creating a measurement object, the weight has to be valid, lot to big weight (in Measurement)"
+            href="#t-1327212608.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0040028" data-sr-rescode="110" data-sr-order="14" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A measurements length can be modified, OTHER_normal length (in Measurement)"
+            href="#t-1303208578.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0040041" data-sr-rescode="110" data-sr-order="15" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A measurements length can be modified, just big enough length (in Measurement)"
+            href="#t-998877372.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0040028" data-sr-rescode="110" data-sr-order="16" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A measurements length can be modified, just small enough length (in Measurement)"
+            href="#t75420574.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0050036" data-sr-rescode="110" data-sr-order="17" data-sr-acttime="0.002">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A measurements weight can be modified, OTHER_normal weight (in Measurement)"
+            href="#t-81517968.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0030025" data-sr-rescode="110" data-sr-order="18" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A measurements weight can be modified, just big enough weight (in Measurement)"
+            href="#t-318792224.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0040174" data-sr-rescode="110" data-sr-order="19" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A measurements weight can be modified, just small enough weight (in Measurement)"
+            href="#t-1244266775.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0039891" data-sr-rescode="110" data-sr-order="20" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="When modifying the length of a measurement, the length should be valid, lot to small length (in Measurement)"
+            href="#t-847448237.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0050216" data-sr-rescode="110" data-sr-order="21" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="When modifying the length of a measurement, the length should be valid, bit to small length (in Measurement)"
+            href="#t207390637.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0039861" data-sr-rescode="110" data-sr-order="22" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="When modifying the length of a measurement, the length should be valid, bit to big length (in Measurement)"
+            href="#t-691533353.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0039853" data-sr-rescode="110" data-sr-order="23" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="When modifying the length of a measurement, the length should be valid, lot to big length (in Measurement)"
+            href="#t-962308033.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0040203" data-sr-rescode="110" data-sr-order="24" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="When modifying the weight of a measurement, the weight should be valid, lot to small weight (in Measurement)"
+            href="#t2140541137.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.003446" data-sr-rescode="110" data-sr-order="25" data-sr-acttime="0.002">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="When modifying the weight of a measurement, the weight should be valid, bit to small weight (in Measurement)"
+            href="#t23862631.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0030021" data-sr-rescode="110" data-sr-order="26" data-sr-acttime="0.0">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="When modifying the weight of a measurement, the weight should be valid, bit to big weight (in Measurement)"
+            href="#t-947105627.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0040028" data-sr-rescode="110" data-sr-order="27" data-sr-acttime="0.002">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="When modifying the weight of a measurement, the weight should be valid, lot to big weight (in Measurement)"
+            href="#t-706321111.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0050066" data-sr-rescode="110" data-sr-order="28" data-sr-acttime="0.002">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A measurement can be modified with a new date (in Measurement)"
+            href="#t-1711509919.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.007002" data-sr-rescode="110" data-sr-order="29" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A measurement can be compared to a measurement which is null (in Measurement)"
+            href="#t1149601742.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0050035" data-sr-rescode="110" data-sr-order="30" data-sr-acttime="0.0">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A measurement can be compared to another measurement, an earlier date (in Measurement)"
+            href="#t1042332343.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0050053" data-sr-rescode="110" data-sr-order="31" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A measurement can be compared to another measurement, a later date (in Measurement)"
+            href="#t1107683498.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0050181" data-sr-rescode="110" data-sr-order="32" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A measurement can be compared to another measurement, the same date (in Measurement)"
+            href="#t778951728.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0039879" data-sr-rescode="110" data-sr-order="33" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A measurement can be checked for equality to a measurement which is null (in Measurement)"
+            href="#t-179055047.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.005004" data-sr-rescode="110" data-sr-order="34" data-sr-acttime="0.0">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A measurement can be checked for equality to another measurement, an earlier date (in Measurement)"
+            href="#t278123935.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0040037" data-sr-rescode="110" data-sr-order="35" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A measurement can be checked for equality to another measurement, a later date (in Measurement)"
+            href="#t492844115.0">&nbsp;</a>
+    </td>
+    <td class="testview-item" 
+        data-sr-exectime="0.0058298" data-sr-rescode="110" data-sr-order="36" data-sr-acttime="0.001">
+        <a
+            class="bar colorSucceeded" 
+            style="height: 2px;"
+            title="A measurement can be checked for equality to another measurement, the same date (in Measurement)"
+            href="#t1897568053.0">&nbsp;</a>
+    </td>
+                        <td class="right-padding">&nbsp;</td>
+                    </tr>
+                    <tr class="horizontal-scale">
+                        <td class="left-padding">&nbsp;</td>
+                        <td colspan="10">&nbsp;</td>
+                            <td class="scale-10-label" colspan="10">10</td>
+                            <td class="scale-10-label" colspan="10">20</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <h2>Feature Summary</h2>
+        <table class="testEvents">
+                <tr>
+            <th>Feature</th>
+        <th colspan="2">Success rate</th>
+        <th>Tests</th>
+        <th>Succeeded</th>
+        <th>Failed</th>
+        <th>Pending</th>
+        <th>Ignored</th>
+        <th>Skipped</th>
+    </tr>
+
+    <tr>
+            <td><a href="#f561150461">Measurement</a></td>
+            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="37 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>37</td>
+    <td>37</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+    </tr>
+        </table>
+
+        <a name="error_summary" />
+        <h2>Error Summary</h2>
+        <table class="testEvents">
+                <tr>
+            <th>Test</th>
+        <th colspan="2">Success rate</th>
+        <th>Tests</th>
+        <th>Succeeded</th>
+        <th>Failed</th>
+        <th>Pending</th>
+        <th>Ignored</th>
+        <th>Skipped</th>
+    </tr>
+
+        </table>
+
+        <h2>Scenario Summary</h2>
+            <a name="f561150461" />
+            <h3>Feature: Measurement</h3>
+            <table class="testEvents">
+                    <tr>
+            <th>Test</th>
+        <th colspan="2">Success rate</th>
+        <th>Tests</th>
+        <th>Succeeded</th>
+        <th>Failed</th>
+        <th>Pending</th>
+        <th>Ignored</th>
+        <th>Skipped</th>
+    </tr>
+
+                    <tr>
+                        <td>
+                                    <a href="#t996628626.0">Scenario: A new measurement object can be created, normal length</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-928247113.0">Scenario: A new measurement object can be created, just big enough length</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-1903920427.0">Scenario: A new measurement object can be created, just small enough length</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t1444664520.0">Scenario: A new measurement object can be created, normal weight</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-701508693.0">Scenario: A new measurement object can be created, just big enough weight</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t222591681.0">Scenario: A new measurement object can be created, just small enough weight</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-1276330586.0">Scenario: When creating a measurement object, the length has to be valid, lot to small length</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t1391523140.0">Scenario: When creating a measurement object, the length has to be valid, bit to small length</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-488015098.0">Scenario: When creating a measurement object, the length has to be valid, bit to big length</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-705620906.0">Scenario: When creating a measurement object, the length has to be valid, lot to big length</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-1581630375.0">Scenario: When creating a measurement object, the weight has to be valid, lot to small weight</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t359054638.0">Scenario: When creating a measurement object, the weight has to be valid, bit to small weight</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-1449337509.0">Scenario: When creating a measurement object, the weight has to be valid, bit to big weight</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-1327212608.0">Scenario: When creating a measurement object, the weight has to be valid, lot to big weight</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-1303208578.0">Scenario: A measurements length can be modified, OTHER_normal length</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-998877372.0">Scenario: A measurements length can be modified, just big enough length</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t75420574.0">Scenario: A measurements length can be modified, just small enough length</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-81517968.0">Scenario: A measurements weight can be modified, OTHER_normal weight</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-318792224.0">Scenario: A measurements weight can be modified, just big enough weight</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-1244266775.0">Scenario: A measurements weight can be modified, just small enough weight</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-847448237.0">Scenario: When modifying the length of a measurement, the length should be valid, lot to small length</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t207390637.0">Scenario: When modifying the length of a measurement, the length should be valid, bit to small length</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-691533353.0">Scenario: When modifying the length of a measurement, the length should be valid, bit to big length</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-962308033.0">Scenario: When modifying the length of a measurement, the length should be valid, lot to big length</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t2140541137.0">Scenario: When modifying the weight of a measurement, the weight should be valid, lot to small weight</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t23862631.0">Scenario: When modifying the weight of a measurement, the weight should be valid, bit to small weight</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-947105627.0">Scenario: When modifying the weight of a measurement, the weight should be valid, bit to big weight</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-706321111.0">Scenario: When modifying the weight of a measurement, the weight should be valid, lot to big weight</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-1711509919.0">Scenario: A measurement can be modified with a new date</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t1149601742.0">Scenario: A measurement can be compared to a measurement which is null</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t1042332343.0">Scenario: A measurement can be compared to another measurement, an earlier date</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t1107683498.0">Scenario: A measurement can be compared to another measurement, a later date</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t778951728.0">Scenario: A measurement can be compared to another measurement, the same date</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t-179055047.0">Scenario: A measurement can be checked for equality to a measurement which is null</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t278123935.0">Scenario: A measurement can be checked for equality to another measurement, an earlier date</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t492844115.0">Scenario: A measurement can be checked for equality to another measurement, a later date</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                                    <a href="#t1897568053.0">Scenario: A measurement can be checked for equality to another measurement, the same date</a>
+
+                        </td>
+                            <td>
+            100%
+    </td>
+    <td>
+        <table class="timelineview" cellpadding="0" cellspacing="0">
+            <tr>
+                    <td>
+                        <a class="bar colorSucceeded" 
+                                style="width: 199px;" 
+                                title="1 succeeded" 
+                                />
+                    </td>
+            </tr>
+        </table>
+    </td>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+                    </tr>
+            </table>
+
+        <h2>Execution Details</h2>
+            <a name="t996628626.0" />
+            <h3>Scenario: A new measurement object can be created, normal length (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:16</li>
+                <li>Execution time (sec): 0,2657555</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a length 180 is provided</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, normal length]-->
+                            <pre class="log">done: MeasurementSteps.GivenALengthIsProvided(180) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.045s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And a weight  75000 is provided</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, normal length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAWeightIsProvided(75000) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And a valid date is enterd</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, normal length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidDateIsEnterd() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to create a new measurement object with normal length</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A new measurement object can be created, normal length]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCreateANewMeasurementObjectWithNormalLength(&quot;normal length&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.068s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object is created with the enterd data</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A new measurement object can be created, normal length]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectIsCreated() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.025s</td>
+                    </tr>
+            </table>
+            <a name="t-928247113.0" />
+            <h3>Scenario: A new measurement object can be created, just big enough length (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0059871</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a length 25 is provided</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, just big enough length]-->
+                            <pre class="log">done: MeasurementSteps.GivenALengthIsProvided(25) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And a weight  75000 is provided</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, just big enough length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAWeightIsProvided(75000) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And a valid date is enterd</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, just big enough length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidDateIsEnterd() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to create a new measurement object with just big enough length</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A new measurement object can be created, just big enough length]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCreateANewMeasurementObjectWithNormalLength(&quot;just big enough l...&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object is created with the enterd data</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A new measurement object can be created, just big enough length]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectIsCreated() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+            </table>
+            <a name="t-1903920427.0" />
+            <h3>Scenario: A new measurement object can be created, just small enough length (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0060038</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a length 275 is provided</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, just small enough length]-->
+                            <pre class="log">done: MeasurementSteps.GivenALengthIsProvided(275) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And a weight  75000 is provided</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, just small enough length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAWeightIsProvided(75000) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And a valid date is enterd</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, just small enough length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidDateIsEnterd() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to create a new measurement object with just small enough length</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A new measurement object can be created, just small enough length]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCreateANewMeasurementObjectWithNormalLength(&quot;just small enough...&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object is created with the enterd data</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A new measurement object can be created, just small enough length]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectIsCreated() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t1444664520.0" />
+            <h3>Scenario: A new measurement object can be created, normal weight (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0050053</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a length 180 is provided</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, normal weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenALengthIsProvided(180) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And a weight  75000 is provided</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, normal weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAWeightIsProvided(75000) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And a valid date is enterd</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, normal weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidDateIsEnterd() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to create a new measurement object with normal weight</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A new measurement object can be created, normal weight]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCreateANewMeasurementObjectWithNormalLength(&quot;normal weight&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object is created with the enterd data</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A new measurement object can be created, normal weight]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectIsCreated() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+            </table>
+            <a name="t-701508693.0" />
+            <h3>Scenario: A new measurement object can be created, just big enough weight (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0070054</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a length 180 is provided</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, just big enough weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenALengthIsProvided(180) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And a weight  300 is provided</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, just big enough weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAWeightIsProvided(300) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And a valid date is enterd</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, just big enough weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidDateIsEnterd() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to create a new measurement object with just big enough weight</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A new measurement object can be created, just big enough weight]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCreateANewMeasurementObjectWithNormalLength(&quot;just big enough w...&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object is created with the enterd data</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A new measurement object can be created, just big enough weight]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectIsCreated() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t222591681.0" />
+            <h3>Scenario: A new measurement object can be created, just small enough weight (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,006006</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a length 180 is provided</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, just small enough weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenALengthIsProvided(180) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And a weight  600000 is provided</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, just small enough weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAWeightIsProvided(600000) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And a valid date is enterd</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A new measurement object can be created, just small enough weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidDateIsEnterd() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to create a new measurement object with just small enough weight</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A new measurement object can be created, just small enough weight]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCreateANewMeasurementObjectWithNormalLength(&quot;just small enough...&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object is created with the enterd data</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A new measurement object can be created, just small enough weight]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectIsCreated() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+            </table>
+            <a name="t-1276330586.0" />
+            <h3>Scenario: When creating a measurement object, the length has to be valid, lot to small length (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0080078</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given an invalid length 15 is provided, which is invalid because lot to small length</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When creating a measurement object, the length has to be valid, lot to small length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAnInvalidLengthIsProvidedWhichIsInvalidBecauseLotToSmallLength(15, &quot;lot to small length&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And all other parameters are valid</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When creating a measurement object, the length has to be valid, lot to small length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAllOtherParametersAreValid() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to create a new measurement</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - When creating a measurement object, the length has to be valid, lot to small length]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCreateANewMeasurement() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should throw an argument exception</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - When creating a measurement object, the length has to be valid, lot to small length]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t1391523140.0" />
+            <h3>Scenario: When creating a measurement object, the length has to be valid, bit to small length (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0040024</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given an invalid length 24 is provided, which is invalid because bit to small length</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When creating a measurement object, the length has to be valid, bit to small length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAnInvalidLengthIsProvidedWhichIsInvalidBecauseLotToSmallLength(24, &quot;bit to small length&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And all other parameters are valid</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When creating a measurement object, the length has to be valid, bit to small length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAllOtherParametersAreValid() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to create a new measurement</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - When creating a measurement object, the length has to be valid, bit to small length]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCreateANewMeasurement() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should throw an argument exception</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - When creating a measurement object, the length has to be valid, bit to small length]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+            </table>
+            <a name="t-488015098.0" />
+            <h3>Scenario: When creating a measurement object, the length has to be valid, bit to big length (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0050053</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given an invalid length 276 is provided, which is invalid because bit to big length</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When creating a measurement object, the length has to be valid, bit to big length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAnInvalidLengthIsProvidedWhichIsInvalidBecauseLotToSmallLength(276, &quot;bit to big length&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And all other parameters are valid</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When creating a measurement object, the length has to be valid, bit to big length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAllOtherParametersAreValid() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to create a new measurement</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - When creating a measurement object, the length has to be valid, bit to big length]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCreateANewMeasurement() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should throw an argument exception</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - When creating a measurement object, the length has to be valid, bit to big length]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t-705620906.0" />
+            <h3>Scenario: When creating a measurement object, the length has to be valid, lot to big length (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0040032</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given an invalid length 300 is provided, which is invalid because lot to big length</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When creating a measurement object, the length has to be valid, lot to big length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAnInvalidLengthIsProvidedWhichIsInvalidBecauseLotToSmallLength(300, &quot;lot to big length&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And all other parameters are valid</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When creating a measurement object, the length has to be valid, lot to big length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAllOtherParametersAreValid() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to create a new measurement</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - When creating a measurement object, the length has to be valid, lot to big length]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCreateANewMeasurement() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should throw an argument exception</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - When creating a measurement object, the length has to be valid, lot to big length]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t-1581630375.0" />
+            <h3>Scenario: When creating a measurement object, the weight has to be valid, lot to small weight (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0060043</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given an invalid weight 100 is provided, which is invalid because lot to small weight</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When creating a measurement object, the weight has to be valid, lot to small weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAnInvalidWeightIsProvidedWhichIsInvalidBecauseLotToSmallWeight(100, &quot;lot to small weight&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And all other parameters are valid</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When creating a measurement object, the weight has to be valid, lot to small weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAllOtherParametersAreValid() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to create a new measurement</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - When creating a measurement object, the weight has to be valid, lot to small weight]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCreateANewMeasurement() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should throw an argument exception</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - When creating a measurement object, the weight has to be valid, lot to small weight]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+            </table>
+            <a name="t359054638.0" />
+            <h3>Scenario: When creating a measurement object, the weight has to be valid, bit to small weight (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0050211</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given an invalid weight 299 is provided, which is invalid because bit to small weight</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When creating a measurement object, the weight has to be valid, bit to small weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAnInvalidWeightIsProvidedWhichIsInvalidBecauseLotToSmallWeight(299, &quot;bit to small weight&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And all other parameters are valid</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When creating a measurement object, the weight has to be valid, bit to small weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAllOtherParametersAreValid() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to create a new measurement</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - When creating a measurement object, the weight has to be valid, bit to small weight]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCreateANewMeasurement() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should throw an argument exception</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - When creating a measurement object, the weight has to be valid, bit to small weight]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+            </table>
+            <a name="t-1449337509.0" />
+            <h3>Scenario: When creating a measurement object, the weight has to be valid, bit to big weight (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0059871</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given an invalid weight 600001 is provided, which is invalid because bit to big weight</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When creating a measurement object, the weight has to be valid, bit to big weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAnInvalidWeightIsProvidedWhichIsInvalidBecauseLotToSmallWeight(600001, &quot;bit to big weight&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And all other parameters are valid</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When creating a measurement object, the weight has to be valid, bit to big weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAllOtherParametersAreValid() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to create a new measurement</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - When creating a measurement object, the weight has to be valid, bit to big weight]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCreateANewMeasurement() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should throw an argument exception</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - When creating a measurement object, the weight has to be valid, bit to big weight]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t-1327212608.0" />
+            <h3>Scenario: When creating a measurement object, the weight has to be valid, lot to big weight (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0050019</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given an invalid weight 660000 is provided, which is invalid because lot to big weight</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When creating a measurement object, the weight has to be valid, lot to big weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAnInvalidWeightIsProvidedWhichIsInvalidBecauseLotToSmallWeight(660000, &quot;lot to big weight&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And all other parameters are valid</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When creating a measurement object, the weight has to be valid, lot to big weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAllOtherParametersAreValid() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to create a new measurement</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - When creating a measurement object, the weight has to be valid, lot to big weight]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCreateANewMeasurement() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should throw an argument exception</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - When creating a measurement object, the weight has to be valid, lot to big weight]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t-1303208578.0" />
+            <h3>Scenario: A measurements length can be modified, OTHER_normal length (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0040028</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurements length can be modified, OTHER_normal length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to change the length to 190, which is OTHER_normal length</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A measurements length can be modified, OTHER_normal length]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToChangeTheLengthToWhichIsOTHER_NormalLength(190, &quot;OTHER_normal length&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should be updated with the new length value</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A measurements length can be modified, OTHER_normal length]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldBeUpdatedWithTheNewLengthValue() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t-998877372.0" />
+            <h3>Scenario: A measurements length can be modified, just big enough length (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0040041</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurements length can be modified, just big enough length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to change the length to 25, which is just big enough length</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A measurements length can be modified, just big enough length]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToChangeTheLengthToWhichIsOTHER_NormalLength(25, &quot;just big enough l...&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should be updated with the new length value</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A measurements length can be modified, just big enough length]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldBeUpdatedWithTheNewLengthValue() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t75420574.0" />
+            <h3>Scenario: A measurements length can be modified, just small enough length (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0040028</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurements length can be modified, just small enough length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to change the length to 275, which is just small enough length</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A measurements length can be modified, just small enough length]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToChangeTheLengthToWhichIsOTHER_NormalLength(275, &quot;just small enough...&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should be updated with the new length value</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A measurements length can be modified, just small enough length]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldBeUpdatedWithTheNewLengthValue() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t-81517968.0" />
+            <h3>Scenario: A measurements weight can be modified, OTHER_normal weight (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0050036</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurements weight can be modified, OTHER_normal weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to change the weight to 80000, which is OTHER_normal weight</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A measurements weight can be modified, OTHER_normal weight]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToChangeTheWeightToWhichIsOTHER_NormalWeight(80000, &quot;OTHER_normal weight&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should be updated with the new weight value</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A measurements weight can be modified, OTHER_normal weight]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldBeUpdatedWithTheNewWeightValue() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t-318792224.0" />
+            <h3>Scenario: A measurements weight can be modified, just big enough weight (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0030025</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurements weight can be modified, just big enough weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to change the weight to 300, which is just big enough weight</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A measurements weight can be modified, just big enough weight]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToChangeTheWeightToWhichIsOTHER_NormalWeight(300, &quot;just big enough w...&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should be updated with the new weight value</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A measurements weight can be modified, just big enough weight]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldBeUpdatedWithTheNewWeightValue() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+            </table>
+            <a name="t-1244266775.0" />
+            <h3>Scenario: A measurements weight can be modified, just small enough weight (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0040174</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurements weight can be modified, just small enough weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to change the weight to 600000, which is just small enough weight</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A measurements weight can be modified, just small enough weight]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToChangeTheWeightToWhichIsOTHER_NormalWeight(600000, &quot;just small enough...&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should be updated with the new weight value</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A measurements weight can be modified, just small enough weight]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldBeUpdatedWithTheNewWeightValue() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t-847448237.0" />
+            <h3>Scenario: When modifying the length of a measurement, the length should be valid, lot to small length (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0039891</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When modifying the length of a measurement, the length should be valid, lot to small length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to change the length to 15, which is lot to small length</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - When modifying the length of a measurement, the length should be valid, lot to small length]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToChangeTheLengthToWhichIsOTHER_NormalLength(15, &quot;lot to small length&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should throw an argument exception</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - When modifying the length of a measurement, the length should be valid, lot to small length]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t207390637.0" />
+            <h3>Scenario: When modifying the length of a measurement, the length should be valid, bit to small length (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0050216</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When modifying the length of a measurement, the length should be valid, bit to small length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to change the length to 24, which is bit to small length</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - When modifying the length of a measurement, the length should be valid, bit to small length]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToChangeTheLengthToWhichIsOTHER_NormalLength(24, &quot;bit to small length&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should throw an argument exception</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - When modifying the length of a measurement, the length should be valid, bit to small length]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t-691533353.0" />
+            <h3>Scenario: When modifying the length of a measurement, the length should be valid, bit to big length (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0039861</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When modifying the length of a measurement, the length should be valid, bit to big length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to change the length to 276, which is bit to big length</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - When modifying the length of a measurement, the length should be valid, bit to big length]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToChangeTheLengthToWhichIsOTHER_NormalLength(276, &quot;bit to big length&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should throw an argument exception</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - When modifying the length of a measurement, the length should be valid, bit to big length]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t-962308033.0" />
+            <h3>Scenario: When modifying the length of a measurement, the length should be valid, lot to big length (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0039853</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When modifying the length of a measurement, the length should be valid, lot to big length]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to change the length to 300, which is lot to big length</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - When modifying the length of a measurement, the length should be valid, lot to big length]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToChangeTheLengthToWhichIsOTHER_NormalLength(300, &quot;lot to big length&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should throw an argument exception</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - When modifying the length of a measurement, the length should be valid, lot to big length]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t2140541137.0" />
+            <h3>Scenario: When modifying the weight of a measurement, the weight should be valid, lot to small weight (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0040203</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When modifying the weight of a measurement, the weight should be valid, lot to small weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to change the weight to 100, which is &lt;Circumstance&gt;</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - When modifying the weight of a measurement, the weight should be valid, lot to small weight]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToChangeTheWeightToWhichIsOTHER_NormalWeight(100, &quot;&lt;Circumstance&gt;&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should throw an argument exception</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - When modifying the weight of a measurement, the weight should be valid, lot to small weight]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t23862631.0" />
+            <h3>Scenario: When modifying the weight of a measurement, the weight should be valid, bit to small weight (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,003446</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When modifying the weight of a measurement, the weight should be valid, bit to small weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to change the weight to 299, which is &lt;Circumstance&gt;</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - When modifying the weight of a measurement, the weight should be valid, bit to small weight]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToChangeTheWeightToWhichIsOTHER_NormalWeight(299, &quot;&lt;Circumstance&gt;&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should throw an argument exception</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - When modifying the weight of a measurement, the weight should be valid, bit to small weight]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+            </table>
+            <a name="t-947105627.0" />
+            <h3>Scenario: When modifying the weight of a measurement, the weight should be valid, bit to big weight (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0030021</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When modifying the weight of a measurement, the weight should be valid, bit to big weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to change the weight to 600001, which is &lt;Circumstance&gt;</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - When modifying the weight of a measurement, the weight should be valid, bit to big weight]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToChangeTheWeightToWhichIsOTHER_NormalWeight(600001, &quot;&lt;Circumstance&gt;&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should throw an argument exception</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - When modifying the weight of a measurement, the weight should be valid, bit to big weight]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t-706321111.0" />
+            <h3>Scenario: When modifying the weight of a measurement, the weight should be valid, lot to big weight (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0040028</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - When modifying the weight of a measurement, the weight should be valid, lot to big weight]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to change the weight to 660000, which is &lt;Circumstance&gt;</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - When modifying the weight of a measurement, the weight should be valid, lot to big weight]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToChangeTheWeightToWhichIsOTHER_NormalWeight(660000, &quot;&lt;Circumstance&gt;&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should throw an argument exception</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - When modifying the weight of a measurement, the weight should be valid, lot to big weight]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldThrowAnArgumentException() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+            </table>
+            <a name="t-1711509919.0" />
+            <h3>Scenario: A measurement can be modified with a new date (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0050066</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurement can be modified with a new date]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When the date is changed with a valid value: 5-10-2013</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A measurement can be modified with a new date]-->
+                            <pre class="log">done: MeasurementSteps.WhenTheDateIsChangedWithAValidValue(&quot;5-10-2013&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the measurement object should be updated with the new date</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A measurement can be modified with a new date]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheMeasurementObjectShouldBeUpdatedWithTheNewDate() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t1149601742.0" />
+            <h3>Scenario: A measurement can be compared to a measurement which is null (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,007002</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurement can be compared to a measurement which is null]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And another measurement object is created which is null</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurement can be compared to a measurement which is null]-->
+                            <pre class="log">done: MeasurementSteps.GivenAnotherMeasurementObjectIsCreatedWhichIsNull() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When the measurement object is compared to the other measurement</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A measurement can be compared to a measurement which is null]-->
+                            <pre class="log">done: MeasurementSteps.WhenTheMeasurementObjectIsComparedToTheOtherMeasurement() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the result should be positive</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A measurement can be compared to a measurement which is null]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheResultShouldBePositive(&quot;positive&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+            </table>
+            <a name="t1042332343.0" />
+            <h3>Scenario: A measurement can be compared to another measurement, an earlier date (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0050035</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object with date 1-1-2001</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurement can be compared to another measurement, an earlier date]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObjectIsGeneratedWithDate(&quot;1-1-2001&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And another measurement object is created with the date 1-1-2000 which is an earlier date</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurement can be compared to another measurement, an earlier date]-->
+                            <pre class="log">done: MeasurementSteps.GivenAnotherMeasurementObjectIsCreatedWithTheDateWhichIsAnEarlierDate(&quot;1-1-2000&quot;, &quot;an earlier date&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When the measurement object is compared to the other measurement</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A measurement can be compared to another measurement, an earlier date]-->
+                            <pre class="log">done: MeasurementSteps.WhenTheMeasurementObjectIsComparedToTheOtherMeasurement() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the result should be positive</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A measurement can be compared to another measurement, an earlier date]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheResultShouldBePositive(&quot;positive&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t1107683498.0" />
+            <h3>Scenario: A measurement can be compared to another measurement, a later date (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0050053</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object with date 1-1-2001</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurement can be compared to another measurement, a later date]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObjectIsGeneratedWithDate(&quot;1-1-2001&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And another measurement object is created with the date 1-2-2001 which is a later date</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurement can be compared to another measurement, a later date]-->
+                            <pre class="log">done: MeasurementSteps.GivenAnotherMeasurementObjectIsCreatedWithTheDateWhichIsAnEarlierDate(&quot;1-2-2001&quot;, &quot;a later date&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When the measurement object is compared to the other measurement</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A measurement can be compared to another measurement, a later date]-->
+                            <pre class="log">done: MeasurementSteps.WhenTheMeasurementObjectIsComparedToTheOtherMeasurement() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the result should be negative</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A measurement can be compared to another measurement, a later date]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheResultShouldBePositive(&quot;negative&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+            </table>
+            <a name="t778951728.0" />
+            <h3>Scenario: A measurement can be compared to another measurement, the same date (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0050181</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object with date 1-1-2001</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurement can be compared to another measurement, the same date]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObjectIsGeneratedWithDate(&quot;1-1-2001&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And another measurement object is created with the date 1-1-2001 which is the same date</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurement can be compared to another measurement, the same date]-->
+                            <pre class="log">done: MeasurementSteps.GivenAnotherMeasurementObjectIsCreatedWithTheDateWhichIsAnEarlierDate(&quot;1-1-2001&quot;, &quot;the same date&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When the measurement object is compared to the other measurement</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A measurement can be compared to another measurement, the same date]-->
+                            <pre class="log">done: MeasurementSteps.WhenTheMeasurementObjectIsComparedToTheOtherMeasurement() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the result should be zero</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A measurement can be compared to another measurement, the same date]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheResultShouldBePositive(&quot;zero&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+            </table>
+            <a name="t-179055047.0" />
+            <h3>Scenario: A measurement can be checked for equality to a measurement which is null (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0039879</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurement can be checked for equality to a measurement which is null]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObject() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And another measurement object is created which is null</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurement can be checked for equality to a measurement which is null]-->
+                            <pre class="log">done: MeasurementSteps.GivenAnotherMeasurementObjectIsCreatedWhichIsNull() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to check for equality between both measurements</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A measurement can be checked for equality to a measurement which is null]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCheckForEqualityBetweenBothMeasurements() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the result should be false</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A measurement can be checked for equality to a measurement which is null]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheResultShouldBePositive(&quot;false&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+            </table>
+            <a name="t278123935.0" />
+            <h3>Scenario: A measurement can be checked for equality to another measurement, an earlier date (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,005004</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object with date 1-1-2001</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurement can be checked for equality to another measurement, an earlier date]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObjectIsGeneratedWithDate(&quot;1-1-2001&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And another measurement object is created with the date 1-1-2000 which is an earlier date</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurement can be checked for equality to another measurement, an earlier date]-->
+                            <pre class="log">done: MeasurementSteps.GivenAnotherMeasurementObjectIsCreatedWithTheDateWhichIsAnEarlierDate(&quot;1-1-2000&quot;, &quot;an earlier date&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to check for equality between both measurements</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A measurement can be checked for equality to another measurement, an earlier date]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCheckForEqualityBetweenBothMeasurements() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the result should be false</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A measurement can be checked for equality to another measurement, an earlier date]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheResultShouldBePositive(&quot;false&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+            </table>
+            <a name="t492844115.0" />
+            <h3>Scenario: A measurement can be checked for equality to another measurement, a later date (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0040037</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object with date 1-1-2001</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurement can be checked for equality to another measurement, a later date]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObjectIsGeneratedWithDate(&quot;1-1-2001&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And another measurement object is created with the date 1-2-2001 which is a later date</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurement can be checked for equality to another measurement, a later date]-->
+                            <pre class="log">done: MeasurementSteps.GivenAnotherMeasurementObjectIsCreatedWithTheDateWhichIsAnEarlierDate(&quot;1-2-2001&quot;, &quot;a later date&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to check for equality between both measurements</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A measurement can be checked for equality to another measurement, a later date]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCheckForEqualityBetweenBothMeasurements() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the result should be false</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A measurement can be checked for equality to another measurement, a later date]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheResultShouldBePositive(&quot;false&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+            </table>
+            <a name="t1897568053.0" />
+            <h3>Scenario: A measurement can be checked for equality to another measurement, the same date (in Specflow_Unit, Measurement)</h3>
+            <ul>
+                <li>Status: Succeeded</li>
+                <li>Start time: 1/07/2015 16:43:17</li>
+                <li>Execution time (sec): 0,0058298</li>
+                <li>Thread: #0</li>
+            </ul>
+            <table class="testEvents">
+                <tr>
+                    <th>Steps</th>
+                    <th>Trace</th>
+                    <th>Result</th>
+                </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Given a valid measurement object with date 1-1-2001</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurement can be checked for equality to another measurement, the same date]-->
+                            <pre class="log">done: MeasurementSteps.GivenAValidMeasurementObjectIsGeneratedWithDate(&quot;1-1-2001&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.002s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">And another measurement object is created with the date 1-1-2001 which is the same date</pre>
+                        </td>
+                        <td>
+                            <!--[TestArrange: Scenario - A measurement can be checked for equality to another measurement, the same date]-->
+                            <pre class="log">done: MeasurementSteps.GivenAnotherMeasurementObjectIsCreatedWithTheDateWhichIsAnEarlierDate(&quot;1-1-2001&quot;, &quot;the same date&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">When i try to check for equality between both measurements</pre>
+                        </td>
+                        <td>
+                            <!--[TestAct: Scenario - A measurement can be checked for equality to another measurement, the same date]-->
+                            <pre class="log">done: MeasurementSteps.WhenITryToCheckForEqualityBetweenBothMeasurements() (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0.001s</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre class="log">Then the result should be true</pre>
+                        </td>
+                        <td>
+                            <!--[TestAssert: Scenario - A measurement can be checked for equality to another measurement, the same date]-->
+                            <pre class="log">done: MeasurementSteps.ThenTheResultShouldBePositive(&quot;true&quot;) (0,0s)</pre>
+                        </td>
+                        <td>Succeeded in 0s</td>
+                    </tr>
+            </table>
+	</body>
+</html>
+</a><div style='position: absolute; top:0px; right:10px; z-index: 1000; text-align: right; font-size: small; color: #FF5555'>
+Generated by an evaluation version of SpecRun.<br />
+This version can be used for evaluation purposes only.<br />
+For obtaining a registered license please visit <a href='http://www.specrun.com'>http://www.specrun.com</a>.
+</div>

@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BMIDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Measurement">
+    <Key>
+      <PropertyRef Name="MeasurementID" />
+    </Key>
+    <Property Name="MeasurementID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SocialSecurityNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Length" Type="Int32" Nullable="false" />
+    <Property Name="Weight" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="Person" Relationship="Self.FK_Measurement_ToTable" FromRole="Measurement" ToRole="Person" />
+  </EntityType>
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="SocialSecurityNumber" />
+    </Key>
+    <Property Name="SocialSecurityNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="BirthDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Gender" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Measurements" Relationship="Self.FK_Measurement_ToTable" FromRole="Person" ToRole="Measurement" />
+  </EntityType>
+  <Association Name="FK_Measurement_ToTable">
+    <End Role="Person" Type="Self.Person" Multiplicity="1" />
+    <End Role="Measurement" Type="Self.Measurement" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="SocialSecurityNumber" />
+      </Principal>
+      <Dependent Role="Measurement">
+        <PropertyRef Name="SocialSecurityNumber" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="BMIDBContext" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Measurements" EntityType="Self.Measurement" />
+    <EntitySet Name="People" EntityType="Self.Person" />
+    <AssociationSet Name="FK_Measurement_ToTable" Association="Self.FK_Measurement_ToTable">
+      <End Role="Person" EntitySet="People" />
+      <End Role="Measurement" EntitySet="Measurements" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

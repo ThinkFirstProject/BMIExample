@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
+  <TopNode>[0-1034]D:\Elektromap\KHLim\I-net\ThinkFirst\WP2 Ontwikkel-implementatie onderzoek\C# Voorbeeld\BMIExample\BMITestSpecFlow\bin\Release\BMITestSpecFlow.dll</TopNode>
+  <SelectedNode>[0-1003]BMITestSpecFlow.MeasurementFeatureFeature.MeasurementIsCreatedWithValidLengthAndConstantValidWeightAndDate("JUST_SMALL_ENOUGH_LENGTH","275",null)</SelectedNode>
+  <ExcludeCategories>false</ExcludeCategories>
+  <Nodes>
+    <Node UniqueName="[0-1034]D:\Elektromap\KHLim\I-net\ThinkFirst\WP2 Ontwikkel-implementatie onderzoek\C# Voorbeeld\BMIExample\BMITestSpecFlow\bin\Release\BMITestSpecFlow.dll" Expanded="true" />
+    <Node UniqueName="[0-1035]BMITestSpecFlow" Expanded="true" />
+    <Node UniqueName="[0-1014]BMITestSpecFlow.MaintainPersonDataFeatureFeature" Expanded="true" />
+    <Node UniqueName="[0-1000]BMITestSpecFlow.MeasurementFeatureFeature" Expanded="true" />
+    <Node UniqueName="[0-1001]BMITestSpecFlow.MeasurementFeatureFeature.MeasurementIsCreatedWithValidLengthAndConstantValidWeightAndDate" Expanded="true" />
+  </Nodes>
+</VisualState>
