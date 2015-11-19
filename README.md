@@ -6,4 +6,4 @@ The project source can be downloaded from https://github.com/ThinkFirstProject/B
 
 ## Detailed description
 A detailed description of the project and the code can be wound in the
-![Think First Project Wiki](https://github.com/ThinkFirstProject/BMIExample/wiki)
+[Think First Project Wiki](https://github.com/ThinkFirstProject/BMIExample/wiki)
